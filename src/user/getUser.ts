@@ -8,7 +8,6 @@ const getUser = Router();
 getUser.get("/", async (req: AuthRequest, res: Response) => {
   try {
     const user = await prisma.user.findMany()
-    console.log(user)
 
     if (!user) {
       return res.status(403).json({ ...error })
