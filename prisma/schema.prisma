@@ -1,0 +1,77 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model PlantsCategory {
+  id        Int    @id @default(autoincrement())
+  name      String
+  image     String
+  plantType String
+
+  plantTypes PlantsType[]
+  Plant      Plant[]
+}
+
+model PlantsType {
+  id         Int     @id @default(autoincrement())
+  name       String
+  image      String
+  plants     Plant[]
+  categoryId Int
+
+  category PlantsCategory @relation(fields: [categoryId], references: [id])
+}
+
+model Plant {
+  id                Int            @id @default(autoincrement())
+  name              String
+  image             String
+  plantType         PlantsType     @relation(fields: [plantTypeId], references: [id])
+  plantTypeId       Int
+  plantsCategory    PlantsCategory @relation(fields: [plantsCategoryId], references: [id])
+  plantsCategoryId  Int
+  waterPeriod       String
+  yieldDuration     String
+  temperature       String
+  lightRequirement  String
+  cultivationMethod String
+
+  @@unique([name, plantTypeId])
+}
+
+model Product {
+  id          Int     @id @default(autoincrement())
+  name        String
+  plantTypeId Int
+  plantType   Order[]
+  price       Int
+  image       String
+}
+
+model Order {
+  id           Int     @id @default(autoincrement())
+  plantName    String
+  plantVariety String
+  price        Float
+  image        String
+  customerName String
+  phone        String
+  productId    Int
+  product      Product @relation(fields: [productId], references: [id])
+}
+
+model Consultation {
+  id           Int    @id @default(autoincrement())
+  fullName     String
+  dagree       String
+  phone_number String
+  image        String
+}
