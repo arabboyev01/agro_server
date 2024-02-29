@@ -3,15 +3,20 @@ import { prisma } from '../../prisma/client'
 import { AuthRequest } from '../../types/global'
 import { error, success } from '../../global/error'
 import { storageDisk } from '../../disk'
+import { auth } from '../../auth'
 
 const createProduct = Router()
 
-createProduct.post('/', storageDisk, async (req: AuthRequest, res: Response) => {
+createProduct.post('/', auth, storageDisk, async (req: AuthRequest, res: Response) => {
     try {
         const { name, plantTypeId, plantsCategoryId, waterPeriod, yieldDuration, temperature, lightRequirement, cultivationMethod }
         = req.body
 
         const image: string = req.imageUrl as string
+
+        if(!req.isAdmin){
+            return res.status(403).json({ success: false, error: 'Unauthorized user' })
+        }
 
         if (!name || !plantTypeId || !plantsCategoryId || !waterPeriod || !yieldDuration || !temperature || !lightRequirement || !cultivationMethod) {
             return res.status(400).json({ success: false, error: 'Missing required fields in the request body.' })
