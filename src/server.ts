@@ -1,4 +1,5 @@
 import express from "express";
+import cors from "cors";
 import createProduct from "./routes/products/createProducts";
 import getProducts from "./routes/products/getProcuts";
 import createUser from "./user/create";
@@ -8,6 +9,7 @@ import login from "./user/login";
 const app = express();
 
 app.use(express.json());
+app.use(cors());
 
 const PORT = 3500;
 
