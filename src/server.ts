@@ -12,7 +12,7 @@ const app = express()
 app.use(express.json())
 app.use(cors())
 
-const PORT = 3500
+const PORT = 3600
 
 app.use("/api/v1/products", createProduct)
 app.use("/api/v1/products", getProducts)

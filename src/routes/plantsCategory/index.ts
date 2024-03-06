@@ -8,6 +8,7 @@ const plantsCategoryRouter = Router()
 
 class PlantsCategoryController {
     async createPlantsCategory(req: AuthRequest, res: Response) {
+        console.log(req.body)
         try {
             if (!req.isAdmin) {
                 return res.status(403).json({ success: false, message: "Unathorized" })
@@ -100,7 +101,7 @@ const plantsCategoryController = new PlantsCategoryController()
 plantsCategoryRouter.post("/", auth, storageDisk, plantsCategoryController.createPlantsCategory)
 plantsCategoryRouter.get("/", plantsCategoryController.getPlantsCategories)
 plantsCategoryRouter.get("/:id", plantsCategoryController.getPlantsCategoryById)
-plantsCategoryRouter.put("/:id",  auth, storageDisk, plantsCategoryController.updatePlantsCategory)
+plantsCategoryRouter.put("/:id", auth, storageDisk, plantsCategoryController.updatePlantsCategory)
 plantsCategoryRouter.delete("/:id", plantsCategoryController.deletePlantsCategory)
 
 export default plantsCategoryRouter
