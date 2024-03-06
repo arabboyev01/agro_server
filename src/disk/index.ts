@@ -23,7 +23,7 @@ export const storageDisk = (req: AuthRequest, res: Response, next: NextFunction)
         if (err) {
             return res.status(500).json({ message: 'server error', success: false })
         } else {
-            req.imageUrl = `https://job-app-server.onrender.com/image/${imageName}`
+            req.imageUrl = `https://agro-server-elpt.onrender.com/image/${imageName}`
             next()
         }
     })
