@@ -18,7 +18,6 @@ async function auth(req: AuthRequest, res: Response, next: NextFunction) {
         const user = await prisma.user.findUnique({
             where: { id: decoded.user_id }
         })
-        console.log(user)
 
         if (!user) {
             return res.status(403).json({ message: 'Unauthorized - User not found' })
