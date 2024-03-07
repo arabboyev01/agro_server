@@ -3,27 +3,38 @@ import { Response, Router } from "express"
 import { prisma } from "../../prisma/client"
 import { auth } from "../../auth"
 import { storageDisk } from "../../disk"
+import { error } from "../../global/error"
 
-const plantsTypeRouter = Router()
+const plantsProducts = Router()
 
-class PlantsTypeController {
+class PlantProducts {
     async createPlantsCategory(req: AuthRequest, res: Response) {
         try {
             if (!req.isAdmin) {
                 return res.status(403).json({ success: false, message: "Unathorized" })
             }
 
-            const { name, categoryId } = req.body
+            const { name, plantsCategoryId, plantTypeId, waterPeriod, yieldDuration, temperature, lightRequirement, cultivationMethod } = req.body
+
+            if (!name || !plantsCategoryId || !plantTypeId || !waterPeriod || !yieldDuration || !temperature || !lightRequirement || !cultivationMethod) {
+                return res.status(400).json({ ...error })
+            }
             const imageUrl: string = req.imageUrl as string
 
-            const newPlantsCategory = await prisma.plantsType.create({
+            const newPlant = await prisma.plant.create({
                 data: {
                     name,
                     image: imageUrl,
-                    categoryId
+                    plantTypeId,
+                    plantsCategoryId,
+                    waterPeriod,
+                    yieldDuration,
+                    temperature,
+                    lightRequirement,
+                    cultivationMethod
                 }
             })
-            return res.json({ success: true, data: newPlantsCategory })
+            return res.json({ success: true, data: newPlant })
         } catch (error) {
             return res.status(500).json({ success: false, error: "Unable to create plants category" })
         }
@@ -31,7 +42,7 @@ class PlantsTypeController {
 
     async getPlantsCategories(req: AuthRequest, res: Response) {
         try {
-            const plantsCategories = await prisma.plantsType.findMany()
+            const plantsCategories = await prisma.plant.findMany()
             return res.json({ success: true, data: plantsCategories });
         } catch (error) {
             res.status(500).json({ error: "Unable to retrieve plants categories" })
@@ -41,7 +52,7 @@ class PlantsTypeController {
     async getPlantsCategoryById(req: AuthRequest, res: Response) {
         try {
             const id = parseInt(req.params.id)
-            const plantsCategory = await prisma.plantsType.findUnique({
+            const plantsCategory = await prisma.plant.findUnique({
                 where: { id }
             });
             if (!plantsCategory) {
@@ -60,15 +71,25 @@ class PlantsTypeController {
             if (!req.isAdmin) {
                 return res.status(403).json({ success: false, message: "Unathorized" })
             }
-            const { name, categoryId } = req.body
+            const { name, plantsCategoryId, plantTypeId, waterPeriod, yieldDuration, temperature, lightRequirement, cultivationMethod } = req.body
+
+            if (!name || !plantsCategoryId || !plantTypeId || !waterPeriod || !yieldDuration || !temperature || !lightRequirement || !cultivationMethod) {
+                return res.status(400).json({ ...error })
+            }
             const imageUrl: string = req.imageUrl as string
 
-            const updatedPlantsCategory = await prisma.plantsType.update({
+            const updatedPlantsCategory = await prisma.plant.update({
                 where: { id },
                 data: {
                     name,
                     image: imageUrl,
-                    categoryId
+                    plantTypeId,
+                    plantsCategoryId,
+                    waterPeriod,
+                    yieldDuration,
+                    temperature,
+                    lightRequirement,
+                    cultivationMethod
                 }
             })
             return res.json({ success: true, data: updatedPlantsCategory, message: "Plants category updated" })
@@ -80,7 +101,7 @@ class PlantsTypeController {
     async deletePlantsCategory(req: AuthRequest, res: Response) {
         try {
             const id = parseInt(req.params.id)
-            await prisma.plantsType.delete({
+            await prisma.plant.delete({
                 where: { id }
             });
             return res.json({ success: true, message: "Plants category deleted successfully" })
@@ -90,12 +111,12 @@ class PlantsTypeController {
     }
 }
 
-const plantsTypeController = new PlantsTypeController()
+const plantProducts = new PlantProducts()
 
-plantsTypeRouter.post("/", auth, storageDisk, plantsTypeController.createPlantsCategory)
-plantsTypeRouter.get("/", plantsTypeController.getPlantsCategories)
-plantsTypeRouter.get("/:id", plantsTypeController.getPlantsCategoryById)
-plantsTypeRouter.put("/:id", auth, storageDisk, plantsTypeController.updatePlantsCategory)
-plantsTypeRouter.delete("/:id", plantsTypeController.deletePlantsCategory)
+plantsProducts.post("/", auth, storageDisk, plantProducts.createPlantsCategory)
+plantsProducts.get("/", plantProducts.getPlantsCategories)
+plantsProducts.get("/:id", plantProducts.getPlantsCategoryById)
+plantsProducts.put("/:id", auth, storageDisk, plantProducts.updatePlantsCategory)
+plantsProducts.delete("/:id", plantProducts.deletePlantsCategory)
 
-export default plantsTypeRouter
+export default plantsProducts

@@ -4,23 +4,27 @@ import { prisma } from "../../prisma/client"
 import { auth } from "../../auth"
 import { storageDisk } from "../../disk"
 
-const plantsTypeRouter = Router()
+const ordersRouter = Router()
 
-class PlantsTypeController {
+class ProductController {
     async createPlantsCategory(req: AuthRequest, res: Response) {
         try {
             if (!req.isAdmin) {
                 return res.status(403).json({ success: false, message: "Unathorized" })
             }
 
-            const { name, categoryId } = req.body
+            const { plantName, plantVariety, price, customerName, phone, productId } = req.body
             const imageUrl: string = req.imageUrl as string
 
-            const newPlantsCategory = await prisma.plantsType.create({
+            const newPlantsCategory = await prisma.order.create({
                 data: {
-                    name,
+                    plantName,
                     image: imageUrl,
-                    categoryId
+                    plantVariety,
+                    price,
+                    customerName,
+                    phone,
+                    productId
                 }
             })
             return res.json({ success: true, data: newPlantsCategory })
@@ -31,7 +35,7 @@ class PlantsTypeController {
 
     async getPlantsCategories(req: AuthRequest, res: Response) {
         try {
-            const plantsCategories = await prisma.plantsType.findMany()
+            const plantsCategories = await prisma.order.findMany()
             return res.json({ success: true, data: plantsCategories });
         } catch (error) {
             res.status(500).json({ error: "Unable to retrieve plants categories" })
@@ -41,7 +45,7 @@ class PlantsTypeController {
     async getPlantsCategoryById(req: AuthRequest, res: Response) {
         try {
             const id = parseInt(req.params.id)
-            const plantsCategory = await prisma.plantsType.findUnique({
+            const plantsCategory = await prisma.order.findUnique({
                 where: { id }
             });
             if (!plantsCategory) {
@@ -60,15 +64,19 @@ class PlantsTypeController {
             if (!req.isAdmin) {
                 return res.status(403).json({ success: false, message: "Unathorized" })
             }
-            const { name, categoryId } = req.body
+    
+            const { plantName, plantVariety, price, customerName, phone, productId } = req.body
             const imageUrl: string = req.imageUrl as string
 
-            const updatedPlantsCategory = await prisma.plantsType.update({
-                where: { id },
+            const updatedPlantsCategory = await prisma.order.create({
                 data: {
-                    name,
+                    plantName,
                     image: imageUrl,
-                    categoryId
+                    plantVariety,
+                    price,
+                    customerName,
+                    phone,
+                    productId
                 }
             })
             return res.json({ success: true, data: updatedPlantsCategory, message: "Plants category updated" })
@@ -80,7 +88,7 @@ class PlantsTypeController {
     async deletePlantsCategory(req: AuthRequest, res: Response) {
         try {
             const id = parseInt(req.params.id)
-            await prisma.plantsType.delete({
+            await prisma.order.delete({
                 where: { id }
             });
             return res.json({ success: true, message: "Plants category deleted successfully" })
@@ -90,12 +98,12 @@ class PlantsTypeController {
     }
 }
 
-const plantsTypeController = new PlantsTypeController()
+const productController = new ProductController()
 
-plantsTypeRouter.post("/", auth, storageDisk, plantsTypeController.createPlantsCategory)
-plantsTypeRouter.get("/", plantsTypeController.getPlantsCategories)
-plantsTypeRouter.get("/:id", plantsTypeController.getPlantsCategoryById)
-plantsTypeRouter.put("/:id", auth, storageDisk, plantsTypeController.updatePlantsCategory)
-plantsTypeRouter.delete("/:id", plantsTypeController.deletePlantsCategory)
+ordersRouter.post("/", auth, storageDisk, productController.createPlantsCategory)
+ordersRouter.get("/", productController.getPlantsCategories)
+ordersRouter.get("/:id", productController.getPlantsCategoryById)
+ordersRouter.put("/:id", auth, storageDisk, productController.updatePlantsCategory)
+ordersRouter.delete("/:id", productController.deletePlantsCategory)
 
-export default plantsTypeRouter
+export default ordersRouter
