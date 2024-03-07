@@ -5,7 +5,7 @@ import getProducts from "./routes/products/getProcuts"
 import createUser from "./user/create"
 import getUser from "./user/getUser"
 import login from "./user/login"
-import plantsCategoryRouter from "./routes/plantsType"
+import plantsCategoryRouter from "./routes/plantsCategories"
 
 const app = express()
 
