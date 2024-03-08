@@ -9,21 +9,22 @@ const plantsTypeRouter = Router()
 class PlantsTypeController {
     async createPlantsCategory(req: AuthRequest, res: Response) {
         try {
-            if (!req.isAdmin) {
-                return res.status(403).json({ success: false, message: "Unathorized" })
+        if (!req.isAdmin) {
+            return res.status(403).json({ success: false, message: "Unathorized" })
+        }
+
+        const { name, categoryId } = req.body
+        const imageUrl: string = req.imageUrl as string
+        console.log(req.body)
+
+        const newPlantsCategory = await prisma.plantsType.create({
+            data: {
+                name,
+                image: imageUrl,
+                categoryId: Number(categoryId)
             }
-
-            const { name, categoryId } = req.body
-            const imageUrl: string = req.imageUrl as string
-
-            const newPlantsCategory = await prisma.plantsType.create({
-                data: {
-                    name,
-                    image: imageUrl,
-                    categoryId
-                }
-            })
-            return res.json({ success: true, data: newPlantsCategory })
+        })
+        return res.json({ success: true, data: newPlantsCategory })
         } catch (error) {
             return res.status(500).json({ success: false, error: "Unable to create plants category" })
         }
@@ -68,7 +69,7 @@ class PlantsTypeController {
                 data: {
                     name,
                     image: imageUrl,
-                    categoryId
+                    categoryId: Number(categoryId)
                 }
             })
             return res.json({ success: true, data: updatedPlantsCategory, message: "Plants category updated" })

@@ -15,7 +15,7 @@ const app = express()
 app.use(express.json())
 app.use(cors())
 
-const PORT = 3600
+const PORT = 3500
 
 app.use("/api/v1/user", createUser)
 app.use("/api/v1/user", getUser)
