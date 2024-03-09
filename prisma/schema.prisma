@@ -43,8 +43,6 @@ model Plant {
   temperature       String
   lightRequirement  String
   cultivationMethod String
-
-  @@unique([name, plantTypeId])
 }
 
 model Product {
