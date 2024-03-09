@@ -25,8 +25,8 @@ class PlantProducts {
                 data: {
                     name,
                     image: imageUrl,
-                    plantTypeId,
-                    plantsCategoryId,
+                    plantTypeId: Number(plantTypeId),
+                    plantsCategoryId: Number(plantsCategoryId),
                     waterPeriod,
                     yieldDuration,
                     temperature,
