@@ -6,20 +6,15 @@ import { storageDisk } from "../../disk"
 
 const ordersRouter = Router()
 
-class ProductController {
+class OrderController {
     async createPlantsCategory(req: AuthRequest, res: Response) {
         try {
-            if (!req.isAdmin) {
-                return res.status(403).json({ success: false, message: "Unathorized" })
-            }
-
-            const { plantName, plantVariety, price, customerName, phone, productId } = req.body
-            const imageUrl: string = req.imageUrl as string
+            const { plantName, plantVariety, price, customerName, phone, productId, image } = req.body
 
             const newPlantsCategory = await prisma.order.create({
                 data: {
                     plantName,
-                    image: imageUrl,
+                    image,
                     plantVariety,
                     price,
                     customerName,
@@ -98,12 +93,12 @@ class ProductController {
     }
 }
 
-const productController = new ProductController()
+const orderController = new OrderController()
 
-ordersRouter.post("/", auth, storageDisk, productController.createPlantsCategory)
-ordersRouter.get("/", productController.getPlantsCategories)
-ordersRouter.get("/:id", productController.getPlantsCategoryById)
-ordersRouter.put("/:id", auth, storageDisk, productController.updatePlantsCategory)
-ordersRouter.delete("/:id", productController.deletePlantsCategory)
+ordersRouter.post("/", auth, orderController.createPlantsCategory)
+ordersRouter.get("/", orderController.getPlantsCategories)
+ordersRouter.get("/:id", orderController.getPlantsCategoryById)
+ordersRouter.put("/:id", auth, storageDisk, orderController.updatePlantsCategory)
+ordersRouter.delete("/:id", orderController.deletePlantsCategory)
 
 export default ordersRouter
