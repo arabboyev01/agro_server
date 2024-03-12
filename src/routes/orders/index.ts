@@ -16,10 +16,10 @@ class OrderController {
                     plantName,
                     image,
                     plantVariety,
-                    price,
+                    price: Number(price),
                     customerName,
                     phone,
-                    productId
+                    productId: Number(productId)
                 }
             })
             return res.json({ success: true, data: newPlantsCategory })
@@ -54,24 +54,19 @@ class OrderController {
 
     async updatePlantsCategory(req: AuthRequest, res: Response) {
         try {
-            const id = parseInt(req.params.id)
+            const id = parseInt(req.params.id)    
+            const { plantName, plantVariety, price, customerName, phone, productId, image } = req.body
 
-            if (!req.isAdmin) {
-                return res.status(403).json({ success: false, message: "Unathorized" })
-            }
-    
-            const { plantName, plantVariety, price, customerName, phone, productId } = req.body
-            const imageUrl: string = req.imageUrl as string
-
-            const updatedPlantsCategory = await prisma.order.create({
+            const updatedPlantsCategory = await prisma.order.update({
+                where: { id },
                 data: {
                     plantName,
-                    image: imageUrl,
+                    image,
                     plantVariety,
-                    price,
+                    price: Number(price),
                     customerName,
                     phone,
-                    productId
+                    productId: Number(productId)
                 }
             })
             return res.json({ success: true, data: updatedPlantsCategory, message: "Plants category updated" })
@@ -95,7 +90,7 @@ class OrderController {
 
 const orderController = new OrderController()
 
-ordersRouter.post("/", auth, orderController.createPlantsCategory)
+ordersRouter.post("/", orderController.createPlantsCategory)
 ordersRouter.get("/", orderController.getPlantsCategories)
 ordersRouter.get("/:id", orderController.getPlantsCategoryById)
 ordersRouter.put("/:id", auth, storageDisk, orderController.updatePlantsCategory)
