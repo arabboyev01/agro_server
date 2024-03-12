@@ -33,7 +33,15 @@ class ProductController {
 
     async getPlantsCategories(req: AuthRequest, res: Response) {
         try {
-            const plantsCategories = await prisma.product.findMany()
+            const search: string = req.query.search as string
+            let plantsCategories;
+        if (search) {
+            plantsCategories = await prisma.product.findMany({
+                where: { OR: [ { name: { contains: search } } ] }
+            })
+        } else {
+            plantsCategories = await prisma.product.findMany()
+        }
             return res.json({ success: true, data: plantsCategories });
         } catch (error) {
             res.status(500).json({ error: "Unable to retrieve plants categories" })
