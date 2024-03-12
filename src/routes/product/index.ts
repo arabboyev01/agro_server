@@ -8,6 +8,7 @@ const productRouter = Router()
 
 class ProductController {
     async createPlantsCategory(req: AuthRequest, res: Response) {
+        console.log(req.body)
         try {
             if (!req.isAdmin) {
                 return res.status(403).json({ success: false, message: "Unathorized" })
@@ -20,8 +21,8 @@ class ProductController {
                 data: {
                     name,
                     image: imageUrl,
-                    plantTypeId,
-                    price
+                    plantTypeId: Number(plantTypeId),
+                    price: Number(price)
                 }
             })
             return res.json({ success: true, data: newPlantsCategory })
