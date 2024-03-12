@@ -70,8 +70,8 @@ class ProductController {
                 data: {
                     name,
                     image: imageUrl,
-                    plantTypeId,
-                    price
+                    plantTypeId: Number(plantTypeId),
+                    price: Number(price)
                 }
             })
             return res.json({ success: true, data: updatedPlantsCategory, message: "Plants category updated" })
