@@ -23,7 +23,9 @@ export const storageDisk = (req: AuthRequest, res: Response, next: NextFunction)
         if (err) {
             return res.status(500).json({ message: 'server error', success: false })
         } else {
-            req.imageUrl = `https://agro-server-elpt.onrender.com/image/${imageName}`
+            const host = req.headers.host
+            const filePath = req.protocol + "://" + host + '/' + imageName
+            req.imageUrl = filePath
             next()
         }
     })
