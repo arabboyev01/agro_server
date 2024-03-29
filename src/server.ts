@@ -9,6 +9,7 @@ import plantsTypeRouter from "./routes/plantsTypes"
 import plantsProducts from "./routes/plants"
 import productRouter from "./routes/product"
 import ordersRouter from "./routes/orders"
+import consultationRouter from "./routes/consultation"
 
 const app = express()
 
@@ -25,6 +26,7 @@ app.use("/api/v1/plants-types", plantsTypeRouter)
 app.use("/api/v1/plant", plantsProducts)
 app.use("/api/v1/products", productRouter)
 app.use("/api/v1/orders", ordersRouter)
+app.use("/api/v1/consultant", consultationRouter)
 
 app.listen(PORT, () => {
     console.log(`Port running on ${PORT}`)
