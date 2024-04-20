@@ -8,7 +8,6 @@ const productRouter = Router()
 
 class ProductController {
     async createPlantsCategory(req: AuthRequest, res: Response) {
-        console.log(req.body)
         try {
             if (!req.isAdmin) {
                 return res.status(403).json({ success: false, message: "Unathorized" })
@@ -42,6 +41,7 @@ class ProductController {
         } else {
             plantsCategories = await prisma.product.findMany()
         }
+        console.log(plantsCategories)
             return res.json({ success: true, data: plantsCategories });
         } catch (error) {
             res.status(500).json({ error: "Unable to retrieve plants categories" })
