@@ -7,31 +7,44 @@ import { storageDisk } from "../../disk"
 const ordersRouter = Router()
 
 class OrderController {
-    async createPlantsCategory(req: AuthRequest, res: Response) {
+    async createOrders(req: AuthRequest, res: Response) {
         try {
-            const { plantName, plantVariety, price, customerName, phone, productId, image } = req.body
+            const { customerName, phone, productId, } = req.body
 
-            const newPlantsCategory = await prisma.order.create({
+            const orders = await prisma.order.create({
                 data: {
-                    plantName,
-                    image,
-                    plantVariety,
-                    price: Number(price),
                     customerName,
-                    phone,
+                    customerPhone: phone,
                     productId: Number(productId)
                 }
             })
-            return res.json({ success: true, data: newPlantsCategory })
+            return res.json({ success: true, data: orders })
         } catch (error) {
             return res.status(500).json({ success: false, error: "Unable to create plants category" })
         }
     }
 
-    async getPlantsCategories(req: AuthRequest, res: Response) {
+    async getOrders(req: AuthRequest, res: Response) {
         try {
-            const plantsCategories = await prisma.order.findMany()
-            return res.json({ success: true, data: plantsCategories });
+            const orders: any = await prisma.order.findMany();
+
+            if (!orders.length) {
+                return res.json({ success: true, data: [] });
+            }
+
+            const ordersWithProducts = await Promise.all(
+                orders.map(async (order: any) => {
+                    const product = await prisma.product.findUnique({
+                        where: { id: order.productId }
+                    })
+                    return {
+                        ...order,
+                        product: product
+                    }
+                })
+            )
+
+            return res.json({ success: true, data: ordersWithProducts })
         } catch (error) {
             res.status(500).json({ error: "Unable to retrieve plants categories" })
         }
@@ -39,37 +52,46 @@ class OrderController {
 
     async getPlantsCategoryById(req: AuthRequest, res: Response) {
         try {
-            const id = parseInt(req.params.id)
-            const plantsCategory = await prisma.order.findUnique({
+            const id = parseInt(req.params.id);
+    
+            const getOrderById = await prisma.order.findUnique({
                 where: { id }
             });
-            if (!plantsCategory) {
-                return res.status(404).json({ success: false, error: "Plants category not found" })
+    
+            if (!getOrderById) {
+                return res.status(404).json({ success: false, error: "Order not found" });
             }
-            return res.json({ success: true, data: plantsCategory })
+    
+            const product = await prisma.product.findUnique({
+                where: { id: getOrderById.productId }
+            });
+    
+            const orderWithProduct = {
+                ...getOrderById,
+                product: product
+            };
+    
+            return res.json({ success: true, data: orderWithProduct });
         } catch (error) {
-            return res.status(500).json({ success: false, error: "Unable to create plants category" })
+            console.error('Error:', error);
+            return res.status(500).json({ success: false, error: "Unable to retrieve order" });
         }
     }
 
     async updatePlantsCategory(req: AuthRequest, res: Response) {
         try {
-            const id = parseInt(req.params.id)    
-            const { plantName, plantVariety, price, customerName, phone, productId, image } = req.body
+            const id = parseInt(req.params.id)
+            const { customerName, phone, productId } = req.body
 
-            const updatedPlantsCategory = await prisma.order.update({
+            const updateOrders = await prisma.order.update({
                 where: { id },
                 data: {
-                    plantName,
-                    image,
-                    plantVariety,
-                    price: Number(price),
                     customerName,
-                    phone,
+                    customerPhone: phone,
                     productId: Number(productId)
                 }
             })
-            return res.json({ success: true, data: updatedPlantsCategory, message: "Plants category updated" })
+            return res.json({ success: true, data: updateOrders, message: "Plants category updated" })
         } catch (error) {
             return res.status(500).json({ success: false, error: "Unable to create plants category" })
         }
@@ -90,8 +112,8 @@ class OrderController {
 
 const orderController = new OrderController()
 
-ordersRouter.post("/", orderController.createPlantsCategory)
-ordersRouter.get("/", orderController.getPlantsCategories)
+ordersRouter.post("/", orderController.createOrders)
+ordersRouter.get("/", orderController.getOrders)
 ordersRouter.get("/:id", orderController.getPlantsCategoryById)
 ordersRouter.put("/:id", auth, storageDisk, orderController.updatePlantsCategory)
 ordersRouter.delete("/:id", orderController.deletePlantsCategory)

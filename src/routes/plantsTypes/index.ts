@@ -9,17 +9,19 @@ const plantsTypeRouter = Router()
 class PlantsTypeController {
     async createPlantsCategory(req: AuthRequest, res: Response) {
         try {
+            
         if (!req.isAdmin) {
             return res.status(403).json({ success: false, message: "Unathorized" })
         }
 
-        const { name, categoryId } = req.body
+        const { name_uz, name_ru, name_en, categoryId } = req.body
         const imageUrl: string = req.imageUrl as string
-        console.log(req.body)
 
         const newPlantsCategory = await prisma.plantsType.create({
             data: {
-                name,
+                name_uz,
+                name_ru,
+                name_en,
                 image: imageUrl,
                 categoryId: Number(categoryId)
             }
@@ -61,13 +63,15 @@ class PlantsTypeController {
             if (!req.isAdmin) {
                 return res.status(403).json({ success: false, message: "Unathorized" })
             }
-            const { name, categoryId } = req.body
+            const { name_uz, name_ru, name_en, categoryId } = req.body
             const imageUrl: string = req.imageUrl as string
 
             const updatedPlantsCategory = await prisma.plantsType.update({
                 where: { id },
                 data: {
-                    name,
+                    name_uz,
+                    name_ru,
+                    name_en,
                     image: imageUrl,
                     categoryId: Number(categoryId)
                 }

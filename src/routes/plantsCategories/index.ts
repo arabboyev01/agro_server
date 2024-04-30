@@ -13,12 +13,14 @@ class PlantsCategoryController {
                 return res.status(403).json({ success: false, message: "Unathorized" })
             }
 
-            const { name, plantType } = req.body
+            const { name_uz, name_ru, name_en, plantType } = req.body
             const imageUrl: string = req.imageUrl as string
 
             const newPlantsCategory = await prisma.plantsCategory.create({
                 data: {
-                    name,
+                    name_uz,
+                    name_ru,
+                    name_en,
                     image: imageUrl,
                     plantType
                 }
@@ -65,13 +67,15 @@ class PlantsCategoryController {
             if (!req.isAdmin) {
                 return res.status(403).json({ success: false, message: "Unathorized" })
             }
-            const { name, plantType } = req.body
+            const { name_uz, name_ru, name_en, plantType } = req.body
             const imageUrl: string = req.imageUrl as string
 
             const updatedPlantsCategory = await prisma.plantsCategory.update({
                 where: { id },
                 data: {
-                    name,
+                    name_uz,
+                    name_ru,
+                    name_en,
                     image: imageUrl,
                     plantType
                 }

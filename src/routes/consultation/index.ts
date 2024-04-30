@@ -9,7 +9,7 @@ const consultationRouter = Router()
 class ConsultationController {
     async creaateConsultation(req: AuthRequest, res: Response) {
         try {
-            const { fullName, dagree, phone_number } = req.body
+            const { fullName, dagree, phone_number, telegram_user, youtube_url } = req.body
             const imageUrl: string = req.imageUrl as string
 
             const newConsultation = await prisma.consultation.create({
@@ -18,9 +18,10 @@ class ConsultationController {
                     image: imageUrl,
                     dagree,
                     phone_number,
+                    telegram_user,
+                    youtube_url
                 }
             })
-            console.log(newConsultation)
             return res.json({ success: true, data: newConsultation })
         } catch (error) {
             return res.status(500).json({ success: false, error: "Unable to create consultation" })
@@ -54,7 +55,7 @@ class ConsultationController {
     async updatePlantsCategory(req: AuthRequest, res: Response) {
         try {
             const id = parseInt(req.params.id)
-            const { fullName, dagree, phone_number, image } = req.body
+            const { fullName, dagree, phone_number, telegram_user, youtube_url } = req.body
             const imageUrl: string = req.imageUrl as string
 
             const updatedPlantsCategory = await prisma.consultation.update({
@@ -64,6 +65,8 @@ class ConsultationController {
                     image: imageUrl,
                     dagree,
                     phone_number,
+                    telegram_user,
+                    youtube_url
                 }
             })
             return res.json({ success: true, data: updatedPlantsCategory, message: "Plants category updated" })

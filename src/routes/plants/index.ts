@@ -14,24 +14,24 @@ class PlantProducts {
                 return res.status(403).json({ success: false, message: "Unathorized" })
             }
 
-            const { name, plantsCategoryId, plantTypeId, waterPeriod, yieldDuration, temperature, lightRequirement, cultivationMethod } = req.body
+            const { name_uz, name_en, name_ru,  plantsCategoryId, plantTypeId, describtion_uz, describtion_ru, describtion_en } = req.body
 
-            if (!name || !plantsCategoryId || !plantTypeId || !waterPeriod || !yieldDuration || !temperature || !lightRequirement || !cultivationMethod) {
+            if (!name_en || !name_uz || !name_ru || !plantsCategoryId || !plantTypeId || !describtion_uz || !describtion_ru || !describtion_en) {
                 return res.status(400).json({ ...error })
             }
             const imageUrl: string = req.imageUrl as string
 
             const newPlant = await prisma.plant.create({
                 data: {
-                    name,
+                    name_uz,
+                    name_ru,
+                    name_en,
                     image: imageUrl,
                     plantTypeId: Number(plantTypeId),
                     plantsCategoryId: Number(plantsCategoryId),
-                    waterPeriod,
-                    yieldDuration,
-                    temperature,
-                    lightRequirement,
-                    cultivationMethod
+                    describtion_en, 
+                    describtion_ru,
+                    describtion_uz
                 }
             })
             return res.json({ success: true, data: newPlant })
@@ -71,9 +71,9 @@ class PlantProducts {
             if (!req.isAdmin) {
                 return res.status(403).json({ success: false, message: "Unathorized" })
             }
-            const { name, plantsCategoryId, plantTypeId, waterPeriod, yieldDuration, temperature, lightRequirement, cultivationMethod } = req.body
+            const { name_uz, name_en, name_ru,  plantsCategoryId, plantTypeId, describtion_uz, describtion_ru, describtion_en } = req.body
 
-            if (!name || !plantsCategoryId || !plantTypeId || !waterPeriod || !yieldDuration || !temperature || !lightRequirement || !cultivationMethod) {
+            if (!name_en || !name_uz || !name_ru || !plantsCategoryId || !plantTypeId || !describtion_uz || !describtion_ru || !describtion_en) {
                 return res.status(400).json({ ...error })
             }
             const imageUrl: string = req.imageUrl as string
@@ -81,15 +81,15 @@ class PlantProducts {
             const updatedPlantsCategory = await prisma.plant.update({
                 where: { id },
                 data: {
-                    name,
+                    name_uz,
+                    name_ru,
+                    name_en,
                     image: imageUrl,
                     plantTypeId: Number(plantTypeId),
                     plantsCategoryId: Number(plantsCategoryId),
-                    waterPeriod,
-                    yieldDuration,
-                    temperature,
-                    lightRequirement,
-                    cultivationMethod
+                    describtion_en, 
+                    describtion_ru,
+                    describtion_uz
                 }
             })
             return res.json({ success: true, data: updatedPlantsCategory, message: "Plants category updated" })
@@ -103,7 +103,7 @@ class PlantProducts {
             const id = parseInt(req.params.id)
             await prisma.plant.delete({
                 where: { id }
-            });
+            })
             return res.json({ success: true, message: "Plants category deleted successfully" })
         } catch (error) {
             return res.status(500).json({ success: false, error: "Unable to create plants category" })

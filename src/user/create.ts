@@ -9,12 +9,11 @@ const createUser = Router();
 
 createUser.post("/", async (req: AuthRequest, res: Response) => {
   try {
-    const { username, email, password } = req.body;
+    const { email, password } = req.body;
     const hashPassword = await hashingPassword(password);
 
     const user = await prisma.user.create({
       data: {
-        username,
         email,
         password: hashPassword,
         role: "ADMIN",

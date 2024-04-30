@@ -12,7 +12,9 @@ datasource db {
 
 model PlantsCategory {
   id        Int    @id @default(autoincrement())
-  name      String
+  name_uz   String
+  name_en   String
+  name_ru   String
   image     String
   plantType String
 
@@ -22,7 +24,9 @@ model PlantsCategory {
 
 model PlantsType {
   id         Int     @id @default(autoincrement())
-  name       String
+  name_uz    String
+  name_en    String
+  name_ru    String
   image      String
   plants     Plant[]
   categoryId Int
@@ -31,23 +35,25 @@ model PlantsType {
 }
 
 model Plant {
-  id                Int            @id @default(autoincrement())
-  name              String
-  image             String
-  plantType         PlantsType     @relation(fields: [plantTypeId], references: [id])
-  plantTypeId       Int
-  plantsCategory    PlantsCategory @relation(fields: [plantsCategoryId], references: [id])
-  plantsCategoryId  Int
-  waterPeriod       String
-  yieldDuration     String
-  temperature       String
-  lightRequirement  String
-  cultivationMethod String
+  id               Int            @id @default(autoincrement())
+  name_uz          String
+  name_en          String
+  name_ru          String
+  image            String
+  plantType        PlantsType     @relation(fields: [plantTypeId], references: [id])
+  plantTypeId      Int
+  plantsCategory   PlantsCategory @relation(fields: [plantsCategoryId], references: [id])
+  plantsCategoryId Int
+  describtion_uz   String
+  describtion_ru   String
+  describtion_en   String
 }
 
 model Product {
   id          Int     @id @default(autoincrement())
-  name        String
+  name_uz     String
+  name_en     String
+  name_ru     String
   plantTypeId Int
   plantType   Order[]
   price       Int
@@ -55,28 +61,25 @@ model Product {
 }
 
 model Order {
-  id           Int     @id @default(autoincrement())
-  plantName    String
-  plantVariety String
-  price        Float
-  image        String
-  customerName String
-  phone        String
-  productId    Int
-  product      Product @relation(fields: [productId], references: [id])
+  id            Int     @id @default(autoincrement())
+  customerName  String
+  customerPhone String
+  productId     Int
+  product       Product @relation(fields: [productId], references: [id])
 }
 
 model Consultation {
-  id           Int    @id @default(autoincrement())
-  fullName     String
-  dagree       String
-  phone_number String
-  image        String
+  id            Int     @id @default(autoincrement())
+  fullName      String
+  dagree        String
+  phone_number  String
+  image         String
+  telegram_user String
+  youtube_url   String?
 }
 
 model User {
   id        Int      @id @default(autoincrement())
-  username  String
   email     String   @unique
   password  String
   role      String   @default("ADMIN")
