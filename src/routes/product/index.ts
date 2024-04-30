@@ -1,5 +1,5 @@
 import { AuthRequest } from "../../types/global"
-import { Response, Router } from "express"
+import { Response, Router } from 'express'
 import { prisma } from "../../prisma/client"
 import { auth } from "../../auth"
 import { storageDisk } from "../../disk"
@@ -34,14 +34,12 @@ class ProductController {
         try {
             const search: string = req.query.search as string
             let plantsCategories;
+            const allProducts = await prisma.product.findMany()
         if (search) {
-            plantsCategories = await prisma.product.findMany({
-                where: { OR: [ { name: { contains: search } } ] }
-            })
+            plantsCategories = allProducts.filter((item) => item.name.toLowerCase().includes(search.toLowerCase()))
         } else {
-            plantsCategories = await prisma.product.findMany()
+            plantsCategories = allProducts
         }
-        console.log(plantsCategories)
             return res.json({ success: true, data: plantsCategories });
         } catch (error) {
             res.status(500).json({ error: "Unable to retrieve plants categories" })
