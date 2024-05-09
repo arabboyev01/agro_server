@@ -9,7 +9,7 @@ const mapInformation = Router()
 class MapInfos {
     async createMap(req: AuthRequest, res: Response) {
         try {
-            const { address, crops, lat, long, SoilsContent } = req.body
+            const { address, crops, lat, long, soilsContent } = req.body
 
             const information = await prisma.information.create({
                 data: {
@@ -17,12 +17,7 @@ class MapInfos {
                     crops,
                     lat,
                     long,
-                    SoilsContent: {
-                        create: SoilsContent,
-                    },
-                },
-                include: {
-                    SoilsContent: true,
+                    soilsContent: soilsContent
                 },
             });
 
@@ -35,11 +30,7 @@ class MapInfos {
     async getMaps(req: AuthRequest, res: Response) {
         try {
 
-            const information = await prisma.information.findMany({
-                include: {
-                    SoilsContent: true,
-                },
-            })
+            const information = await prisma.information.findMany()
 
             return res.status(200).json({ ...success, data: information });
         } catch (err: unknown) {
@@ -51,10 +42,7 @@ class MapInfos {
         try {
 
             const information = await prisma.information.findUnique({
-                where: { id: Number(req.params.id) },
-                include: {
-                    SoilsContent: true,
-                },
+                where: { id: Number(req.params.id) }
             })
 
             return res.status(200).json({ ...success, data: information });
@@ -65,7 +53,7 @@ class MapInfos {
 
     async updateMap(req: AuthRequest, res: Response) {
         try {
-            const { address, crops, lat, long, SoilsContent } = req.body
+            const { address, crops, lat, long, soilsContent } = req.body
             const id: string = req.params.id as string
 
             const information = await prisma.information.update({
@@ -75,9 +63,7 @@ class MapInfos {
                     crops,
                     lat,
                     long,
-                    SoilsContent: {
-                        update: SoilsContent,
-                    },
+                    soilsContent: soilsContent
                 }
             })
 

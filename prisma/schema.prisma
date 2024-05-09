@@ -88,20 +88,10 @@ model User {
 }
 
 model Information {
-  id           Int           @id @default(autoincrement())
+  id           Int    @id @default(autoincrement())
   address      String
   crops        String
   lat          String
   long         String
-  SoilsContent SoilContent[]
-}
-
-model SoilContent {
-  id            Int         @id @default(autoincrement())
-  fosfor        String
-  kaliy         String
-  azot          String
-  gemus         String
-  informationId Int
-  Informations  Information @relation(fields: [informationId], references: [id])
+  soilsContent String @default("null")
 }
