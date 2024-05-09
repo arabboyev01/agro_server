@@ -11,6 +11,7 @@ import productRouter from "./routes/product"
 import ordersRouter from "./routes/orders"
 import consultationRouter from "./routes/consultation"
 import varityDetails from "./routes/varityDetails"
+import mapInformation from "./routes/map"
 
 const app = express()
 
@@ -30,6 +31,7 @@ app.use("/api/v1/products", productRouter)
 app.use("/api/v1/orders", ordersRouter)
 app.use("/api/v1/consultant", consultationRouter)
 app.use("/api/v1/varity-details", varityDetails)
+app.use("/api/v1/map", mapInformation)
 
 app.listen(PORT, () => {
     console.log(`Port running on ${PORT}`)
