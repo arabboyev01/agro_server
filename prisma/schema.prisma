@@ -16,7 +16,6 @@ model PlantsCategory {
   name_en   String
   name_ru   String
   image     String
-  plantType String
 
   plantTypes PlantsType[]
   Plant      Plant[]
