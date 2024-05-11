@@ -59,7 +59,8 @@ class DistrictRouter {
                 return res.status(403).json({ success: false, message: "Unathorized" });
             }
 
-            const district = await prisma.district.create({
+            const district = await prisma.district.update({
+                where: { id: Number(req.params.id) },
                 data: { ...req.body },
             });
             return res.json({ success: true, data: district });

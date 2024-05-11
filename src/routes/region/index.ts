@@ -59,7 +59,8 @@ class RegionsClass {
                 return res.status(403).json({ success: false, message: "Unathorized" });
             }
 
-            const region = await prisma.region.create({
+            const region = await prisma.region.update({
+                where: { id: Number(req.params.id) },
                 data: { ...req.body },
             });
             return res.json({ success: true, data: region });
