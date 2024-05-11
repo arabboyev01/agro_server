@@ -13,6 +13,7 @@ import consultationRouter from "./routes/consultation"
 import varityDetails from "./routes/varityDetails"
 import mapInformation from "./routes/map"
 import TypesByCategories from "./routes/plantsTypes/typesByCategories"
+import regionRouter from "./routes/region"
 
 const app = express()
 
@@ -34,6 +35,7 @@ app.use("/api/v1/consultant", consultationRouter)
 app.use("/api/v1/varity-details", varityDetails)
 app.use("/api/v1/map", mapInformation)
 app.use("/api/v1/types-id", TypesByCategories)
+app.use("/api/v1/region", regionRouter)
 
 app.listen(PORT, () => {
     console.log(`Port running on ${PORT}`)

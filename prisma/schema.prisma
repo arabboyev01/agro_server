@@ -11,11 +11,11 @@ datasource db {
 }
 
 model PlantsCategory {
-  id        Int    @id @default(autoincrement())
-  name_uz   String
-  name_en   String
-  name_ru   String
-  image     String
+  id      Int    @id @default(autoincrement())
+  name_uz String
+  name_en String
+  name_ru String
+  image   String
 
   plantTypes PlantsType[]
   Plant      Plant[]
@@ -93,4 +93,21 @@ model Information {
   lat          String
   long         String
   soilsContent String @default("null")
+}
+
+model Region {
+  id        Int        @id @default(autoincrement())
+  name_uz   String
+  name_ru   String
+  name_en   String
+  districts District[]
+}
+
+model District {
+  id       Int    @id @default(autoincrement())
+  name_uz  String
+  name_ru  String
+  name_en  String
+  regionId Int
+  region   Region @relation(fields: [regionId], references: [id])
 }
