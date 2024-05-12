@@ -7,9 +7,9 @@ import { auth } from "../../../auth"
 const distrcitsByRegionId = Router()
 const prisma = new PrismaClient()
 
-distrcitsByRegionId.get("/:regionId", auth, (req: AuthRequest, res: Response) => {
+distrcitsByRegionId.get("/:regionId", auth, async (req: AuthRequest, res: Response) => {
     try {
-        const district = prisma.district.findMany({
+        const district = await prisma.district.findMany({
             where: { regionId: Number(req.params.regionId) }
         })
 
