@@ -3,16 +3,19 @@ import { Response, Router } from "express"
 import { prisma } from "../../prisma/client"
 import { auth } from "../../auth"
 import { success, error } from "../../global/error"
+import { informationType } from "../../token/type"
 
 const mapInformation = Router()
 
 class MapInfos {
     async createMap(req: AuthRequest, res: Response) {
         try {
-            const { address, crops, lat, long, soilsContent } = req.body
+            const { address, crops, lat, long, soilsContent, regionId, districtId } = req.body
 
             const information = await prisma.information.create({
                 data: {
+                    regionId: Number(regionId),
+                    districtId: Number(districtId),
                     address,
                     crops,
                     lat,
@@ -30,35 +33,76 @@ class MapInfos {
     async getMaps(req: AuthRequest, res: Response) {
         try {
 
-            const information = await prisma.information.findMany()
+            const information: informationType[] = await prisma.information.findMany();
 
-            return res.status(200).json({ ...success, data: information });
+            const regionPromises = information.map(info =>
+                prisma.region.findUnique({
+                    where: { id: info.regionId }
+                })
+            )
+
+            const districtPromises = information.map(info =>
+                prisma.district.findUnique({
+                    where: { id: info.districtId }
+                })
+            )
+
+            const regions = await Promise.all(regionPromises)
+            const districts = await Promise.all(districtPromises)
+
+            const mappedInformation = information.map((info, index) => ({
+                ...info,
+                region: regions[index],
+                district: districts[index]
+            }))
+
+            return res.status(200).json({ ...success, data: mappedInformation })
         } catch (err: unknown) {
-            return res.status(500).send({ ...error, message: (err as Error).message });
+            return res.status(500).send({ ...error, message: (err as Error).message })
         }
     }
 
     async getMapById(req: AuthRequest, res: Response) {
         try {
-
             const information = await prisma.information.findUnique({
                 where: { id: Number(req.params.id) }
             })
 
-            return res.status(200).json({ ...success, data: information });
+            if (!information) {
+                return res.status(404).json({ ...error, message: "Information not found." });
+            }
+
+            const region = await prisma.region.findUnique({
+                where: { id: information.regionId }
+            })
+
+            const district = await prisma.district.findUnique({
+                where: { id: information.districtId }
+            })
+
+            const mappedInformation = {
+                ...information,
+                region: region,
+                district: district
+            }
+
+            return res.status(200).json({ ...success, data: mappedInformation })
         } catch (err: unknown) {
-            return res.status(500).send({ ...error, message: (err as Error).message });
+            return res.status(500).send({ ...error, message: (err as Error).message })
         }
     }
 
+
     async updateMap(req: AuthRequest, res: Response) {
         try {
-            const { address, crops, lat, long, soilsContent } = req.body
+            const { address, crops, lat, long, soilsContent, regionId, districtId } = req.body
             const id: string = req.params.id as string
 
             const information = await prisma.information.update({
                 where: { id: Number(id) },
                 data: {
+                    regionId: Number(regionId),
+                    districtId: Number(districtId),
                     address,
                     crops,
                     lat,
