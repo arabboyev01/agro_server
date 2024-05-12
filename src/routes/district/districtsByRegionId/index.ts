@@ -9,9 +9,6 @@ const prisma = new PrismaClient()
 
 distrcitsByRegionId.get("/:regionId", auth, (req: AuthRequest, res: Response) => {
     try {
-        if (!req.user) {
-            return res.status(403).json({ ...error, message: "Unauthorized" })
-        }
         const district = prisma.district.findMany({
             where: { regionId: Number(req.params.regionId) }
         })
