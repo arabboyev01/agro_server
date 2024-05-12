@@ -93,8 +93,8 @@ model Information {
   lat          String
   long         String
   soilsContent String @default("null")
-  regionId     Int
-  districtId   Int
+  regionId     Int    @default(1)
+  districtId   Int    @default(1)
 }
 
 model Region {
