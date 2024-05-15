@@ -35,6 +35,10 @@ class MapInfos {
 
             const information: informationType[] = await prisma.information.findMany();
 
+            if (!information) {
+                return res.status(404).json({ ...error, message: "Information not found." });
+            }
+
             const regionPromises = information.map(info =>
                 prisma.region.findUnique({
                     where: { id: info.regionId }
@@ -76,6 +80,14 @@ class MapInfos {
                 where: { id: information.regionId }
             })
 
+            const types = await prisma.plantsType.findMany({
+                where: {
+                    id: {
+                        in: JSON.parse(information.crops)
+                    }
+                }
+            })
+
             const district = await prisma.district.findUnique({
                 where: { id: information.districtId }
             })
@@ -83,7 +95,8 @@ class MapInfos {
             const mappedInformation = {
                 ...information,
                 region: region,
-                district: district
+                district: district,
+                crops: types
             }
 
             return res.status(200).json({ ...success, data: mappedInformation })
