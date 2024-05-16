@@ -4,13 +4,14 @@ import { prisma } from "../../prisma/client"
 import { auth } from "../../auth"
 import { success, error } from "../../global/error"
 import { informationType } from "../../token/type"
+import { utils } from "./utils"
 
 const mapInformation = Router()
 
 class MapInfos {
     async createMap(req: AuthRequest, res: Response) {
         try {
-            const { address, crops, lat, long, soilsContent, regionId, districtId } = req.body
+            const { address, crops, lat, long, soilsContent, regionId, districtId, userId } = req.body
 
             const information = await prisma.information.create({
                 data: {
@@ -20,7 +21,8 @@ class MapInfos {
                     crops,
                     lat,
                     long,
-                    soilsContent: soilsContent
+                    soilsContent: soilsContent,
+                    userId: Number(userId)
                 },
             });
 
@@ -30,85 +32,195 @@ class MapInfos {
         }
     }
 
+    // async getMaps(req: AuthRequest, res: Response) {
+    //     try {
+
+    //         if(req?.isAdmin){
+    //             const information: informationType[] = await prisma.information.findMany()
+    //             if (!information) {
+    //                 return res.status(404).json({ ...error, message: "Information not found." });
+    //             }
+
+    //             const regionPromises = information.map(info =>
+    //                 prisma.region.findUnique({
+    //                     where: { id: info.regionId }
+    //                 })
+    //             )
+
+    //             const districtPromises = information.map(info =>
+    //                 prisma.district.findUnique({
+    //                     where: { id: info.districtId }
+    //                 })
+    //             )
+
+    //             const regions = await Promise.all(regionPromises)
+    //             const districts = await Promise.all(districtPromises)
+
+    //             const mappedInformation = information.map((info, index) => ({
+    //                 ...info,
+    //                 region: regions[index],
+    //                 district: districts[index]
+    //             }))
+
+    //             return res.status(200).json({ ...success, data: mappedInformation })
+
+    //         }
+    //         if(req?.isUser){
+    //             const information: informationType[] = await prisma.information.findMany({
+    //                 where: { userId: req?.user?.id}
+    //             })
+    //             if (!information) {
+    //                 return res.status(404).json({ ...error, message: "Information not found." });
+    //             }
+
+    //             const regionPromises = information.map(info =>
+    //                 prisma.region.findUnique({
+    //                     where: { id: info.regionId }
+    //                 })
+    //             )
+
+    //             const districtPromises = information.map(info =>
+    //                 prisma.district.findUnique({
+    //                     where: { id: info.districtId }
+    //                 })
+    //             )
+
+    //             const regions = await Promise.all(regionPromises)
+    //             const districts = await Promise.all(districtPromises)
+
+    //             const mappedInformation = information.map((info, index) => ({
+    //                 ...info,
+    //                 region: regions[index],
+    //                 district: districts[index]
+    //             }))
+
+    //             return res.status(200).json({ ...success, data: mappedInformation })
+    //         }
+    //     } catch (err: unknown) {
+    //         return res.status(500).send({ ...error, message: (err as Error).message })
+    //     }
+    // }
+
     async getMaps(req: AuthRequest, res: Response) {
         try {
+            let information: informationType[] = []
 
-            const information: informationType[] = await prisma.information.findMany();
+            if (req ?.isAdmin) {
+                information = await prisma.information.findMany();
+            } else if (req ?.isUser) {
+                information = await prisma.information.findMany({
+                    where: { userId: req ?.user ?.id }
+                });
+            }
 
-            if (!information) {
+            if (!information || information.length === 0) {
                 return res.status(404).json({ ...error, message: "Information not found." });
             }
 
-            const regionPromises = information.map(info =>
-                prisma.region.findUnique({
-                    where: { id: info.regionId }
-                })
-            )
+            const mappedInformation = await utils(req, information)
 
-            const districtPromises = information.map(info =>
-                prisma.district.findUnique({
-                    where: { id: info.districtId }
-                })
-            )
-
-            const regions = await Promise.all(regionPromises)
-            const districts = await Promise.all(districtPromises)
-
-            const mappedInformation = information.map((info, index) => ({
-                ...info,
-                region: regions[index],
-                district: districts[index]
-            }))
-
-            return res.status(200).json({ ...success, data: mappedInformation })
+            return res.status(200).json({ ...success, data: mappedInformation });
         } catch (err: unknown) {
-            return res.status(500).send({ ...error, message: (err as Error).message })
+            return res.status(500).send({ ...error, message: (err as Error).message });
         }
     }
 
+    // async getMapById(req: AuthRequest, res: Response) {
+    //     try {
+    //         const information = await prisma.information.findUnique({
+    //             where: { id: Number(req.params.id) }
+    //         })
+
+    //         if (!information) {
+    //             return res.status(404).json({ ...error, message: "Information not found." });
+    //         }
+
+    //         const region = await prisma.region.findUnique({
+    //             where: { id: information.regionId }
+    //         })
+
+    //         const types = await prisma.plantsType.findMany({
+    //             where: {
+    //                 id: {
+    //                     in: JSON.parse(information.crops)
+    //                 }
+    //             }
+    //         })
+
+    //         const district = await prisma.district.findUnique({
+    //             where: { id: information.districtId }
+    //         })
+
+    //         const mappedInformation = {
+    //             ...information,
+    //             region: region,
+    //             district: district,
+    //             crops: types
+    //         }
+
+    //         return res.status(200).json({ ...success, data: mappedInformation })
+    //     } catch (err: unknown) {
+    //         return res.status(500).send({ ...error, message: (err as Error).message })
+    //     }
+    // }
+
     async getMapById(req: AuthRequest, res: Response) {
         try {
-            const information = await prisma.information.findUnique({
-                where: { id: Number(req.params.id) }
-            })
+            let information;
+
+            if (req ?.isAdmin) {
+                information = await prisma.information.findUnique({
+                    where: { id: Number(req.params.id) }
+                });
+            } else if (req ?.isUser) {
+                information = await prisma.information.findUnique({
+                    where: {
+                        id: Number(req.params.id),
+                        userId: req ?.user ?.id
+                    }
+                });
+            }
 
             if (!information) {
                 return res.status(404).json({ ...error, message: "Information not found." });
             }
 
-            const region = await prisma.region.findUnique({
+            const regionPromise = prisma.region.findUnique({
                 where: { id: information.regionId }
-            })
+            });
 
-            const types = await prisma.plantsType.findMany({
+            const typesPromise = prisma.plantsType.findMany({
                 where: {
                     id: {
                         in: JSON.parse(information.crops)
                     }
                 }
-            })
+            });
 
-            const district = await prisma.district.findUnique({
+            const districtPromise = prisma.district.findUnique({
                 where: { id: information.districtId }
-            })
+            });
+
+            const [region, types, district] = await Promise.all([regionPromise, typesPromise, districtPromise]);
 
             const mappedInformation = {
                 ...information,
                 region: region,
                 district: district,
                 crops: types
-            }
+            };
 
-            return res.status(200).json({ ...success, data: mappedInformation })
+            return res.status(200).json({ ...success, data: mappedInformation });
         } catch (err: unknown) {
-            return res.status(500).send({ ...error, message: (err as Error).message })
+            return res.status(500).send({ ...error, message: (err as Error).message });
         }
     }
 
 
+
     async updateMap(req: AuthRequest, res: Response) {
         try {
-            const { address, crops, lat, long, soilsContent, regionId, districtId } = req.body
+            const { address, crops, lat, long, soilsContent, regionId, districtId, userId } = req.body
             const id: string = req.params.id as string
 
             const information = await prisma.information.update({
@@ -120,7 +232,8 @@ class MapInfos {
                     crops,
                     lat,
                     long,
-                    soilsContent: soilsContent
+                    soilsContent: soilsContent,
+                    userId: Number(userId)
                 }
             })
 

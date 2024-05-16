@@ -95,6 +95,7 @@ model Information {
   soilsContent String @default("null")
   regionId     Int    @default(1)
   districtId   Int    @default(1)
+  userId       Int    @default(1)
 }
 
 model Region {
