@@ -3,12 +3,12 @@ import { Router, Response } from "express";
 import { AuthRequest } from "../types/global";
 import { error, success } from "../global/error";
 import { auth } from "../auth";
+import isAdmin from "../auth/admin";
 
 const userRole = Router();
 
-userRole.get("/", auth, async (req: AuthRequest, res: Response) => {
+userRole.get("/", auth, isAdmin, async (req: AuthRequest, res: Response) => {
     try {
-        if (!req.isAdmin) return res.status(403).json({ ...error })
 
         const user = await prisma.user.findMany({
             where: { role: "USER" }

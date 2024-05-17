@@ -38,7 +38,7 @@ class MapInfos {
             let information: informationType[] = []
 
             if (req.isAdmin) {
-                information = await prisma.information.findMany();
+                information = await prisma.information.findMany()
             }  
             if (req.isUser) {
                 information = await prisma.information.findMany({
