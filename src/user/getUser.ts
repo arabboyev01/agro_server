@@ -2,12 +2,15 @@ import { prisma } from "../prisma/client";
 import { Router, Response } from "express";
 import { AuthRequest } from "../types/global";
 import { error, success } from "../global/error";
+import { auth } from "../auth";
 
 const getUser = Router();
 
-getUser.get("/", async (req: AuthRequest, res: Response) => {
+getUser.get("/", auth, async (req: AuthRequest, res: Response) => {
   try {
-    const user = await prisma.user.findMany()
+    const user = await prisma.user.findUnique({
+      where: { id: Number(req.user.id) }
+    })
 
     if (!user) {
       return res.status(403).json({ ...error })
