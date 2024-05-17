@@ -16,6 +16,7 @@ import TypesByCategories from "./routes/plantsTypes/typesByCategories"
 import regionRouter from "./routes/region"
 import districtRouter from "./routes/district"
 import distrcitsByRegionId from "./routes/district/districtsByRegionId"
+import userRole from "./user/roleUser"
 
 const app = express()
 
@@ -40,6 +41,7 @@ app.use("/api/v1/types-id", TypesByCategories)
 app.use("/api/v1/region", regionRouter)
 app.use("/api/v1/district", districtRouter)
 app.use("/api/v1/district-by-region-id", distrcitsByRegionId)
+app.use("/api/v1/user-role", userRole)
 
 app.listen(PORT, () => {
     console.log(`Port running on ${PORT}`)

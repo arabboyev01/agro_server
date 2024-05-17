@@ -29,7 +29,7 @@ login.post("/", async (req: AuthRequest, res: Response) => {
 
     return res
       .status(200)
-      .json({ ...success, message: "loggin in", token });
+      .json({ ...success, message: "Logged in", token, role: user.role });
   } catch (err) {
     return res.status(501).json({ ...error });
   }

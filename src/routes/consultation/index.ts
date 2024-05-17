@@ -3,6 +3,7 @@ import { Response, Router } from "express"
 import { prisma } from "../../prisma/client"
 import { auth } from "../../auth"
 import { storageDisk } from "../../disk"
+import isAdmin from "../../auth/admin"
 
 const consultationRouter = Router()
 
@@ -90,10 +91,10 @@ class ConsultationController {
 
 const consultationController = new ConsultationController()
 
-consultationRouter.post("/", auth, storageDisk, consultationController.creaateConsultation)
+consultationRouter.post("/", auth, isAdmin, storageDisk, consultationController.creaateConsultation)
 consultationRouter.get("/", consultationController.getConsultation)
 consultationRouter.get("/:id", consultationController.getConsultationById)
-consultationRouter.put("/:id", auth, storageDisk, consultationController.updatePlantsCategory)
+consultationRouter.put("/:id", auth, isAdmin, storageDisk, consultationController.updatePlantsCategory)
 consultationRouter.delete("/:id", consultationController.deleteConsultant)
 
 export default consultationRouter
