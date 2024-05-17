@@ -11,6 +11,7 @@ const mapInformation = Router()
 class MapInfos {
     async createMap(req: AuthRequest, res: Response) {
         try {
+            if(!req.isAdmin) return res.status(403).json({ ...error, message: "forbidden"})
             const { address, crops, lat, long, soilsContent, regionId, districtId, userId } = req.body
 
             const information = await prisma.information.create({
@@ -36,17 +37,17 @@ class MapInfos {
         try {
             let information: informationType[] = []
 
-            if (req?.isAdmin) {
+            if (req.isAdmin) {
                 information = await prisma.information.findMany();
             }  
-            if (req?.isUser) {
+            if (req.isUser) {
                 information = await prisma.information.findMany({
-                    where: { userId: Number(req?.user?.id) }
+                    where: { userId: Number(req.user.id) }
                 });
             }
 
             if (!information || information.length === 0) {
-                return res.status(404).json({ ...error, message: "Information not found." });
+                return res.status(404).json({ ...error, message: "Information not found.", datas: information });
             }
 
             const mappedInformation = await utils(req, information)
@@ -61,7 +62,7 @@ class MapInfos {
         try {
             let information;
 
-            if (req ?.isAdmin) {
+            if (req.isAdmin) {
                 information = await prisma.information.findUnique({
                     where: { id: Number(req.params.id) }
                 });
@@ -75,11 +76,11 @@ class MapInfos {
             }
 
             if (!information) {
-                return res.status(404).json({ ...error, message: "Information not found." });
+                return res.status(404).json({ ...error, message: "Information not found.", data: information });
             }
 
             const regionPromise = prisma.region.findUnique({
-                where: { id: information.regionId }
+                where: { id: information?.regionId }
             });
 
             const typesPromise = prisma.plantsType.findMany({
@@ -91,7 +92,7 @@ class MapInfos {
             });
 
             const districtPromise = prisma.district.findUnique({
-                where: { id: information.districtId }
+                where: { id: information?.districtId }
             });
 
             const [region, types, district] = await Promise.all([regionPromise, typesPromise, districtPromise]);
@@ -113,6 +114,7 @@ class MapInfos {
 
     async updateMap(req: AuthRequest, res: Response) {
         try {
+            if (!req.isAdmin) return res.status(403).json({ ...error, message: "forbidden" })
             const { address, crops, lat, long, soilsContent, regionId, districtId, userId } = req.body
             const id: string = req.params.id as string
 
@@ -138,6 +140,7 @@ class MapInfos {
 
     async deleteMap(req: AuthRequest, res: Response) {
         try {
+            if (!req.isAdmin) return res.status(403).json({ ...error, message: "forbidden" })
             const id = parseInt(req.params.id)
             await prisma.information.delete({
                 where: { id }

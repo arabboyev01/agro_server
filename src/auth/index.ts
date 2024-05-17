@@ -23,7 +23,8 @@ async function auth(req: AuthRequest, res: Response, next: NextFunction) {
             return res.status(403).json({ message: 'Unauthorized - User not found' })
         }
         req.isAdmin = user.role === 'ADMIN',
-        req.isUser = user.role === 'USER'
+        req.isUser = user.role === 'USER',
+        req.user = user
 
         next()
     } catch (error) {
