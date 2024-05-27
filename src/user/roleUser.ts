@@ -18,7 +18,7 @@ userRole.get("/", auth, isAdmin, async (req: AuthRequest, res: Response) => {
             return res.status(403).json({ ...error })
         }
 
-        return res.status(200).json({ ...success, message: "user data", user })
+        return res.status(200).json({ ...success, message: "user role", user })
     } catch (err) {
         return res.status(501).json({ ...error })
     }

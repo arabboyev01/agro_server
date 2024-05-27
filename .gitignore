@@ -3,3 +3,6 @@ node_modules
 .env
 image
 prisma/migrations
+coverage
+jest.config.ts
+package-lock.json

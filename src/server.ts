@@ -17,6 +17,7 @@ import regionRouter from "./routes/region"
 import districtRouter from "./routes/district"
 import distrcitsByRegionId from "./routes/district/districtsByRegionId"
 import userRole from "./user/roleUser"
+import { prisma, createUserIfNotExists } from "./prisma/client"
 
 const app = express()
 
@@ -25,7 +26,7 @@ app.use(cors())
 app.use('/image', express.static('image'))
 
 const PORT = 3500
-
+app.use('/', createUserIfNotExists)
 app.use("/api/v1/user", createUser)
 app.use("/api/v1/user", getUser)
 app.use("/api/v1/login", login)
@@ -45,4 +46,8 @@ app.use("/api/v1/user-role", userRole)
 
 app.listen(PORT, () => {
     console.log(`Port running on ${PORT}`)
+})
+
+prisma.$on('beforeConnect' as never, async () => {
+    await createUserIfNotExists()
 })

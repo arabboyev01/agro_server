@@ -4,12 +4,11 @@ import { AuthRequest } from "../types/global";
 import { error, success } from "../global/error";
 import { hashingPassword } from "../hash";
 import { generateToken } from "../token";
-import { auth } from "../auth";
 import isAdmin from "../auth/admin";
 
 const createUser = Router();
 
-createUser.post("/", auth, isAdmin, async (req: AuthRequest, res: Response) => {
+createUser.post("/", isAdmin, async (req: AuthRequest, res: Response) => {
   try {
     const { email, password, role } = req.body;
     const hashPassword = await hashingPassword(password);
