@@ -57,6 +57,7 @@ model Product {
   plantType   Order[]
   price       Int
   image       String
+  cart        Cart[]
 }
 
 model Order {
@@ -84,6 +85,7 @@ model User {
   role      String   @default("ADMIN")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  Carts     Cart[]
 }
 
 model Information {
@@ -113,4 +115,13 @@ model District {
   name_en  String
   regionId Int
   region   Region @relation(fields: [regionId], references: [id])
+}
+
+model Cart {
+  id        Int     @id @default(autoincrement())
+  userId    Int     @unique()
+  productId Int     @default(1)
+  users     User    @relation(fields: [userId], references: [id])
+  prodcuts  Product @relation(fields: [productId], references: [id])
+  count     Int     @default(1)
 }

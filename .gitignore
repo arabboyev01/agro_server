@@ -6,3 +6,4 @@ prisma/migrations
 coverage
 jest.config.ts
 package-lock.json
+dist
