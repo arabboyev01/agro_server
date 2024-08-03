@@ -1,14 +1,13 @@
-import { prisma } from "../prisma/client";
-import { Router, Response } from "express";
-import { AuthRequest } from "../types/global";
-import { error, success } from "../global/error";
-import { hashingPassword } from "../hash";
-import { generateToken } from "../token";
-import isAdmin from "../auth/admin";
+import { prisma } from "../prisma/client"
+import { Router, Response } from "express"
+import { AuthRequest } from "../types/global"
+import { error, success } from "../global/error"
+import { hashingPassword } from "../hash"
+import { generateToken } from "../token"
 
 const createUser = Router();
 
-createUser.post("/", isAdmin, async (req: AuthRequest, res: Response) => {
+createUser.post("/", async (req: AuthRequest, res: Response) => {
   try {
     const { email, password, role } = req.body;
     const hashPassword = await hashingPassword(password);
@@ -25,8 +24,7 @@ createUser.post("/", isAdmin, async (req: AuthRequest, res: Response) => {
       return res.status(403).json({ ...error });
     }
 
-    const token = generateToken(user.id);
-
+    const token = generateToken(user.id)
     return res
       .status(201)
       .json({ ...success, message: "user created", token, user });
