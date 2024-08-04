@@ -7,7 +7,6 @@ const prisma = new PrismaClient()
 const Card = Router()
 
 const createCArtorders = async (req: AuthRequest, res: Response) => {
-  console.log(req.user)
   try {
     const data = await prisma.cart.create({
       data: {
@@ -16,8 +15,6 @@ const createCArtorders = async (req: AuthRequest, res: Response) => {
         count: Number(req.body.count),
       },
     });
-
-    console.log(data);
 
     if (!data) {
       return res
@@ -37,16 +34,14 @@ const createCArtorders = async (req: AuthRequest, res: Response) => {
 };
 
 const gupdateCArtorders = async (req: AuthRequest, res: Response) => {
-  console.log(req.user);
   try {
+    const { id } = req.params
     const data = await prisma.cart.update({
-      where: { userId: Number(req?.user?.id) },
+      where: { id: Number(id) },
       data: {
         count: Number(req.body.count),
       },
     });
-
-    console.log(data);
 
     if (!data) {
       return res
@@ -110,7 +105,7 @@ const delArtorders = async (req: AuthRequest, res: Response) => {
 };
 
 Card.post("/", auth, createCArtorders)
-Card.patch("/", auth, gupdateCArtorders)
+Card.patch("/:id", auth, gupdateCArtorders)
 Card.get("/", auth, getArtorders)
 Card.delete("/", auth, delArtorders)
 

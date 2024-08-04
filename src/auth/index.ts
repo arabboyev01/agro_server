@@ -6,7 +6,8 @@ import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
 async function auth(req: AuthRequest, res: Response, next: NextFunction) {
-    const token: string = req.header('Authorization') as string
+    const authorizationHeader = req.header('Authorization') as string
+    const token = authorizationHeader.split(' ')[1]
 
     if (!token) {
         return res.status(403).json({ message: 'Unauthorized - No token provided' })
@@ -23,8 +24,8 @@ async function auth(req: AuthRequest, res: Response, next: NextFunction) {
             return res.status(403).json({ message: 'Unauthorized - User not found' })
         }
         req.isAdmin = user.role === 'ADMIN',
-        req.isUser = user.role === 'USER',
-        req.user = user
+            req.isUser = user.role === 'USER',
+            req.user = user
 
         next()
     } catch (error) {
