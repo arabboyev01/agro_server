@@ -9,11 +9,11 @@ const login = Router();
 
 login.post("/", async (req: AuthRequest, res: Response) => {
   try {
-    const { email, password } = req.body;
-
+    const { email, password } = req.body
+    
     const user: any = await prisma.user.findUnique({
       where: { email },
-    });
+    })
 
     if (!user) {
       return res.status(403).json({ ...error, message: "incorrect email" });
@@ -33,5 +33,5 @@ login.post("/", async (req: AuthRequest, res: Response) => {
   } catch (err) {
     return res.status(501).json({ ...error });
   }
-});
-export default login;
+})
+export default login

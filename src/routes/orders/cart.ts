@@ -49,7 +49,7 @@ const gupdateCArtorders = async (req: AuthRequest, res: Response) => {
         .json({ success: false, message: "Something went wrong " });
     }
 
-    return res.status(201).json({ success: true, data });
+    return res.status(200).json({ success: true, data });
   } catch (err: unknown) {
     return res
       .status(500)
