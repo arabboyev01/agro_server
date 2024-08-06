@@ -1,64 +1,71 @@
-import { PrismaClient } from "@prisma/client"
-import { Response, Router } from "express"
-import { auth } from "../../auth"
-import { AuthRequest } from "../../types/global"
+import { PrismaClient } from "@prisma/client";
+import { Response, Router } from "express";
+import { auth } from "../../auth";
+import { AuthRequest } from "../../types/global";
 
-const prisma = new PrismaClient()
-const Card = Router()
+const prisma = new PrismaClient();
+const Card = Router();
 
 const createCArtorders = async (req: AuthRequest, res: Response) => {
   try {
-    const data = await prisma.cart.create({
-      data: {
-        userId: Number(req.user.id),
-        productId: Number(req.body.productId),
-        count: Number(req.body.count),
-      },
-    });
+  const data = await prisma.cart.create({
+    data: {
+      userId: Number(req.user.id),
+      productId: Number(req.body.productId),
+      count: Number(req.body.count),
+    },
+  })
 
-    if (!data) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Something went wrong " });
-    }
+  if (!data) {
+    return res
+      .status(400)
+      .json({ success: false, message: "Something went wrong " });
+  }
 
-    return res.status(201).json({ success: true, data });
+  return res.status(201).json({ success: true, data });
   } catch (err: unknown) {
     return res
       .status(500)
       .json({
         success: false,
         message: "Interna server error" + (err as Error).message,
-      });
+      })
   }
-};
+}
 
 const gupdateCArtorders = async (req: AuthRequest, res: Response) => {
   try {
-    const { id } = req.params
-    const data = await prisma.cart.update({
-      where: { id: Number(id) },
-      data: {
-        count: Number(req.body.count),
-      },
-    });
+  const { productId } = req.params
 
-    if (!data) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Something went wrong " });
-    }
+  const cart = await prisma.cart.findUnique({
+    where: { productId: Number(productId)}
+  })
 
-    return res.status(200).json({ success: true, data });
+  const data = await prisma.cart.update({
+    where: { id: Number(cart?.id) },
+    data: {
+      count: Number(req.body.count),
+    },
+  })
+
+  console.log("update", data);
+
+  if (!data) {
+    return res
+      .status(400)
+      .json({ success: false, message: "Something went wrong " });
+  }
+
+  return res.status(200).json({ success: true, data });
   } catch (err: unknown) {
     return res
       .status(500)
       .json({
         success: false,
         message: "Interna server error" + (err as Error).message,
-      });
+      })
   }
-};
+}
 
 const getArtorders = async (req: AuthRequest, res: Response) => {
   try {
@@ -81,7 +88,7 @@ const getArtorders = async (req: AuthRequest, res: Response) => {
       message: "Interna server error" + (err as Error).message,
     });
   }
-};
+}
 
 const delArtorders = async (req: AuthRequest, res: Response) => {
   try {
@@ -100,13 +107,13 @@ const delArtorders = async (req: AuthRequest, res: Response) => {
     return res.status(500).json({
       success: false,
       message: "Interna server error" + (err as Error).message,
-    });
+    })
   }
-};
+}
 
 Card.post("/", auth, createCArtorders)
-Card.patch("/:id", auth, gupdateCArtorders)
+Card.patch("/:productId", auth, gupdateCArtorders)
 Card.get("/", auth, getArtorders)
 Card.delete("/", auth, delArtorders)
 
-export default Card;
+export default Card
