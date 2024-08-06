@@ -120,7 +120,7 @@ model District {
 model Cart {
   id        Int     @id @default(autoincrement())
   userId    Int 
-  productId Int     @default(1)
+  productId Int     @default(0) @unique()
   users     User    @relation(fields: [userId], references: [id])
   prodcuts  Product @relation(fields: [productId], references: [id])
   count     Int     @default(1)
