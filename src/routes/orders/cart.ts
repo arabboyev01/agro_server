@@ -93,17 +93,18 @@ const getArtorders = async (req: AuthRequest, res: Response) => {
 
 const delArtorders = async (req: AuthRequest, res: Response) => {
   try {
-    const data = prisma.cart.findMany({
-      where: { userId: Number(req?.user?.id) },
-    });
+    const { id } = req.params
+    const deleted = await prisma.cart.delete({
+      where: { id: Number(id) },
+    })
 
-    if (!data) {
+    if (!deleted) {
       return res
         .status(400)
         .json({ success: false, message: "Something went wrong " });
     }
 
-    return res.status(201).json({ success: true, data });
+    return res.status(202).json({ success: true, message: "Deleted" });
   } catch (err: unknown) {
     return res.status(500).json({
       success: false,
@@ -115,6 +116,6 @@ const delArtorders = async (req: AuthRequest, res: Response) => {
 Card.post("/", auth, createCArtorders)
 Card.patch("/:id", auth, gupdateCArtorders)
 Card.get("/", auth, getArtorders)
-Card.delete("/", auth, delArtorders)
+Card.delete("/:id", auth, delArtorders)
 
 export default Card
