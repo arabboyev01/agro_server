@@ -50,7 +50,6 @@ const gupdateCArtorders = async (req: AuthRequest, res: Response) => {
     },
   })
 
-  console.log("update", data);
 
   if (!data) {
     return res
