@@ -35,14 +35,16 @@ const createCArtorders = async (req: AuthRequest, res: Response) => {
 
 const gupdateCArtorders = async (req: AuthRequest, res: Response) => {
   try {
-  const { productId } = req.params
+  const { id } = req.params
 
   const cart = await prisma.cart.findUnique({
-    where: { productId: Number(productId)}
+    where: { productId: Number(id)}
   })
 
+  if(!cart) return res.status(403).json({ success: false, message: "product not found" })
+
   const data = await prisma.cart.update({
-    where: { id: Number(cart?.id) },
+    where: { id: Number(cart.id) },
     data: {
       count: Number(req.body.count),
     },
@@ -112,7 +114,7 @@ const delArtorders = async (req: AuthRequest, res: Response) => {
 }
 
 Card.post("/", auth, createCArtorders)
-Card.patch("/:productId", auth, gupdateCArtorders)
+Card.patch("/:id", auth, gupdateCArtorders)
 Card.get("/", auth, getArtorders)
 Card.delete("/", auth, delArtorders)
 
