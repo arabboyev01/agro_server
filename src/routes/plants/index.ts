@@ -41,9 +41,22 @@ class PlantProducts {
     }
 
     async getPlantsCategories(req: AuthRequest, res: Response) {
+        const categoryId: string = req.query.type as string;
+        console.log(categoryId)
         try {
-            const plantsCategories = await prisma.plant.findMany()
-            return res.json({ success: true, data: plantsCategories });
+
+            let plantsCategory
+
+            if(categoryId){
+
+                plantsCategory = await prisma.plant.findMany({
+                    where: { plantTypeId: Number(categoryId)}
+                });
+            } else {
+                plantsCategory = await prisma.plant.findMany();
+            }
+
+            return res.json({ success: true, data: plantsCategory });
         } catch (error) {
             res.status(500).json({ error: "Unable to retrieve plants categories" })
         }

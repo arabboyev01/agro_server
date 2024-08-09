@@ -37,6 +37,8 @@ class ProductController {
   async getPlantsCategories(req: AuthRequest, res: Response) {
     try {
       const search: string = req.query.search as string;
+      const categoryId: string = req.query.categoryId as string
+      console.log(categoryId)
       let plantsCategories
       const allProducts = await prisma.product.findMany();
       if (search) {
@@ -47,7 +49,13 @@ class ProductController {
             item.name_en.toLowerCase().includes(search.toLowerCase())
           )
         })
-      } else {
+      } else if(categoryId){
+        plantsCategories = await prisma.product.findMany({
+          where: {
+            plantTypeId: parseInt(categoryId),
+          },
+        });
+      }else {
         plantsCategories = allProducts;
       }
       return res.json({ success: true, data: plantsCategories });
