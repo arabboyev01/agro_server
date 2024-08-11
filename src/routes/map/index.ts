@@ -1,12 +1,9 @@
 import { AuthRequest } from "../../types/global"
-import { Response, Router } from "express"
+import { Response } from "express"
 import { prisma } from "../../prisma/client"
-import { auth } from "../../auth"
 import { success, error } from "../../global/error"
 import { informationType } from "../../token/type"
 import { utils } from "./utils"
-
-const mapInformation = Router()
 
 class MapInfos {
     async createMap(req: AuthRequest, res: Response) {
@@ -43,45 +40,45 @@ class MapInfos {
             if (req.isUser) {
                 information = await prisma.information.findMany({
                     where: { userId: Number(req.user.id) }
-                });
+                })
             }
 
             if (!information || information.length === 0) {
-                return res.status(404).json({ ...error, message: "Information not found.", datas: information });
+                return res.status(404).json({ ...error, message: "Information not found.", datas: information })
             }
 
             const mappedInformation = await utils(req, information)
 
-            return res.status(200).json({ ...success, data: mappedInformation });
+            return res.status(200).json({ ...success, data: mappedInformation })
         } catch (err: unknown) {
-            return res.status(500).send({ ...error, message: (err as Error).message });
+            return res.status(500).send({ ...error, message: (err as Error).message })
         }
     }
 
     async getMapById(req: AuthRequest, res: Response) {
         try {
-            let information;
+            let information
 
             if (req.isAdmin) {
                 information = await prisma.information.findUnique({
                     where: { id: Number(req.params.id) }
-                });
-            } else if (req ?.isUser) {
+                })
+            } else if (req?.isUser) {
                 information = await prisma.information.findUnique({
                     where: {
                         id: Number(req.params.id),
                         userId: Number(req?.user?.id)
                     }
-                });
+                })
             }
 
             if (!information) {
-                return res.status(404).json({ ...error, message: "Information not found.", data: information });
+                return res.status(404).json({ ...error, message: "Information not found.", data: information })
             }
 
             const regionPromise = prisma.region.findUnique({
                 where: { id: information?.regionId }
-            });
+            })
 
             const typesPromise = prisma.plantsType.findMany({
                 where: {
@@ -89,11 +86,11 @@ class MapInfos {
                         in: JSON.parse(information.crops)
                     }
                 }
-            });
+            })
 
             const districtPromise = prisma.district.findUnique({
                 where: { id: information?.districtId }
-            });
+            })
 
             const [region, types, district] = await Promise.all([regionPromise, typesPromise, districtPromise]);
 
@@ -102,11 +99,11 @@ class MapInfos {
                 region: region,
                 district: district,
                 crops: types
-            };
+            }
 
-            return res.status(200).json({ ...success, data: mappedInformation });
+            return res.status(200).json({ ...success, data: mappedInformation })
         } catch (err: unknown) {
-            return res.status(500).send({ ...error, message: (err as Error).message });
+            return res.status(500).send({ ...error, message: (err as Error).message })
         }
     }
 
@@ -132,9 +129,9 @@ class MapInfos {
                 }
             })
 
-            return res.status(200).json({ ...success, data: information });
+            return res.status(200).json({ ...success, data: information })
         } catch (err: unknown) {
-            return res.status(500).send({ ...error, message: (err as Error).message });
+            return res.status(500).send({ ...error, message: (err as Error).message })
         }
     }
 
@@ -144,7 +141,7 @@ class MapInfos {
             const id = parseInt(req.params.id)
             await prisma.information.delete({
                 where: { id }
-            });
+            })
             return res.json({ success: true, message: "Map information deleted" })
         } catch (error: unknown) {
             return res.status(500).json({ success: false, error: (error as Error).message })
@@ -152,12 +149,4 @@ class MapInfos {
     }
 }
 
-const mapInfos = new MapInfos()
-
-mapInformation.post("/", auth, mapInfos.createMap)
-mapInformation.get("/", auth, mapInfos.getMaps)
-mapInformation.get("/:id", auth, mapInfos.getMapById)
-mapInformation.put("/:id", auth, mapInfos.updateMap)
-mapInformation.delete("/:id", mapInfos.deleteMap)
-
-export default mapInformation
+export const mapInfos = new MapInfos()

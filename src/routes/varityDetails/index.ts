@@ -1,12 +1,11 @@
-import { Router, Response } from "express"
+import { Response } from "express"
 import { AuthRequest } from "../../types/global"
 import { error } from "../../global/error"
 import { PrismaClient } from "@prisma/client"
 
-const varityDetails = Router()
 const prisma = new PrismaClient()
 
-varityDetails.get("/", async (req: AuthRequest, res: Response) => {
+const varityDetailsRoute =  async (req: AuthRequest, res: Response) => {
   try {
     const type: string = req.query.type as string;
     const category: string = req.query.category as string;
@@ -30,5 +29,5 @@ varityDetails.get("/", async (req: AuthRequest, res: Response) => {
   } catch (err: unknown) {
     return res.status(500).json({ ...error })
   }
-})
-export default varityDetails
+}
+export default varityDetailsRoute

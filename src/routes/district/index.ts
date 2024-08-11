@@ -89,22 +89,4 @@ class DistrictRouter {
     }
 }
 
-const districts = new DistrictRouter();
-
-districtRouter.post(
-    "/",
-    auth,
-    storageDisk,
-    districts.createDistrict
-);
-districtRouter.get("/", districts.getDistricts);
-districtRouter.get("/:id", districts.getDistrictByCategory);
-districtRouter.put(
-    "/:id",
-    auth,
-    storageDisk,
-    districts.updateDistrict
-);
-districtRouter.delete("/:id", districts.deleteDistricts);
-
-export default districtRouter;
+export const districts = new DistrictRouter();

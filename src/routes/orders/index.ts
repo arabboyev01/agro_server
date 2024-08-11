@@ -1,10 +1,9 @@
 import { AuthRequest } from "../../types/global"
-import { Response, Router } from "express"
+import { Response } from "express"
 import { prisma } from "../../prisma/client"
 import { auth } from "../../auth"
 import { storageDisk } from "../../disk"
 
-const ordersRouter = Router()
 
 class OrderController {
     async createOrders(req: AuthRequest, res: Response) {
@@ -110,12 +109,4 @@ class OrderController {
     }
 }
 
-const orderController = new OrderController()
-
-ordersRouter.post("/", orderController.createOrders)
-ordersRouter.get("/", orderController.getOrders)
-ordersRouter.get("/:id", orderController.getPlantsCategoryById)
-ordersRouter.put("/:id", auth, storageDisk, orderController.updatePlantsCategory)
-ordersRouter.delete("/:id", orderController.deletePlantsCategory)
-
-export default ordersRouter
+export const orderController = new OrderController()

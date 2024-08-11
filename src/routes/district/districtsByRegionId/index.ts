@@ -1,13 +1,11 @@
-import { Router, Response } from "express"
+import { Response } from "express"
 import { PrismaClient } from "@prisma/client"
 import { AuthRequest } from "../../../types/global"
 import { success, error } from "../../../global/error"
-import { auth } from "../../../auth"
 
-const distrcitsByRegionId = Router()
 const prisma = new PrismaClient()
 
-distrcitsByRegionId.get("/:regionId", auth, async (req: AuthRequest, res: Response) => {
+export const getDistrictByRegionId = async (req: AuthRequest, res: Response) => {
     try {
         const district = await prisma.district.findMany({
             where: { regionId: Number(req.params.regionId) }
@@ -17,5 +15,4 @@ distrcitsByRegionId.get("/:regionId", auth, async (req: AuthRequest, res: Respon
     } catch (err: unknown) {
         return res.status(500).json({ ...error, message: (err as Error).message })
     }
-})
-export default distrcitsByRegionId
+}

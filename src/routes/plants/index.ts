@@ -1,11 +1,9 @@
 import { AuthRequest } from "../../types/global"
-import { Response, Router } from "express"
+import { Response } from "express"
 import { prisma } from "../../prisma/client"
 import { auth } from "../../auth"
 import { storageDisk } from "../../disk"
 import { error } from "../../global/error"
-
-const plantsProducts = Router()
 
 class PlantProducts {
     async createPlantsCategory(req: AuthRequest, res: Response) {
@@ -124,12 +122,4 @@ class PlantProducts {
     }
 }
 
-const plantProducts = new PlantProducts()
-
-plantsProducts.post("/", auth, storageDisk, plantProducts.createPlantsCategory)
-plantsProducts.get("/", plantProducts.getPlantsCategories)
-plantsProducts.get("/:id", plantProducts.getPlantsCategoryById)
-plantsProducts.put("/:id", auth, storageDisk, plantProducts.updatePlantsCategory)
-plantsProducts.delete("/:id", plantProducts.deletePlantsCategory)
-
-export default plantsProducts
+export const plantProducts = new PlantProducts()

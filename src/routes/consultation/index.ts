@@ -1,11 +1,6 @@
 import { AuthRequest } from "../../types/global"
-import { Response, Router } from "express"
+import { Response } from "express"
 import { prisma } from "../../prisma/client"
-import { auth } from "../../auth"
-import { storageDisk } from "../../disk"
-import isAdmin from "../../auth/admin"
-
-const consultationRouter = Router()
 
 class ConsultationController {
     async creaateConsultation(req: AuthRequest, res: Response) {
@@ -89,12 +84,4 @@ class ConsultationController {
     }
 }
 
-const consultationController = new ConsultationController()
-
-consultationRouter.post("/", auth, isAdmin, storageDisk, consultationController.creaateConsultation)
-consultationRouter.get("/", consultationController.getConsultation)
-consultationRouter.get("/:id", consultationController.getConsultationById)
-consultationRouter.put("/:id", auth, isAdmin, storageDisk, consultationController.updatePlantsCategory)
-consultationRouter.delete("/:id", consultationController.deleteConsultant)
-
-export default consultationRouter
+export const consultationController = new ConsultationController()

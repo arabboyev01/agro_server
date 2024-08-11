@@ -1,10 +1,7 @@
-import { AuthRequest } from "../../types/global";
-import { Response, Router } from "express";
-import { prisma } from "../../prisma/client";
-import { auth } from "../../auth";
-import { storageDisk } from "../../disk";
+import { AuthRequest } from "../../types/global"
+import { Response } from "express"
+import { prisma } from "../../prisma/client"
 
-const productRouter = Router();
 
 class ProductController {
   async createPlantsCategory(req: AuthRequest, res: Response) {
@@ -129,27 +126,9 @@ class ProductController {
     } catch (error) {
       return res
         .status(500)
-        .json({ success: false, error: "Unable to create plants category" });
+        .json({ success: false, error: "Unable to create plants category" })
     }
   }
 }
 
-const productController = new ProductController();
-
-productRouter.post(
-  "/",
-  auth,
-  storageDisk,
-  productController.createPlantsCategory
-);
-productRouter.get("/", productController.getPlantsCategories);
-productRouter.get("/:id", productController.getPlantsCategoryById);
-productRouter.put(
-  "/:id",
-  auth,
-  storageDisk,
-  productController.updatePlantsCategory
-);
-productRouter.delete("/:id", productController.deletePlantsCategory);
-
-export default productRouter;
+export const productController = new ProductController()

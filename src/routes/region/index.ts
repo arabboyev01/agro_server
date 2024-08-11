@@ -1,10 +1,6 @@
-import { AuthRequest } from "../../types/global";
-import { Response, Router } from "express";
-import { prisma } from "../../prisma/client";
-import { auth } from "../../auth";
-import { storageDisk } from "../../disk";
-
-const regionRouter = Router();
+import { AuthRequest } from "../../types/global"
+import { Response } from "express"
+import { prisma } from "../../prisma/client"
 
 class RegionsClass {
     async createRegion(req: AuthRequest, res: Response) {
@@ -89,22 +85,4 @@ class RegionsClass {
     }
 }
 
-const regionsClass = new RegionsClass();
-
-regionRouter.post(
-    "/",
-    auth,
-    storageDisk,
-    regionsClass.createRegion
-);
-regionRouter.get("/", regionsClass.getRegions);
-regionRouter.get("/:id", regionsClass.getRegionById);
-regionRouter.put(
-    "/:id",
-    auth,
-    storageDisk,
-    regionsClass.updateRegion
-);
-regionRouter.delete("/:id", regionsClass.deleteRegion);
-
-export default regionRouter;
+export const regionsClass = new RegionsClass()
