@@ -58,7 +58,7 @@ class RegionsClass {
             const region = await prisma.region.update({
                 where: { id: Number(req.params.id) },
                 data: { ...req.body },
-            });
+            })
             return res.json({ success: true, data: region });
         } catch (error) {
             return res

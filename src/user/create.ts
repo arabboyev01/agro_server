@@ -31,5 +31,5 @@ createUser.post("/", async (req: AuthRequest, res: Response) => {
   } catch (err: unknown) {
     return res.status(501).json({ ...error, message: (err as Error).message });
   }
-});
-export default createUser;
+})
+export default createUser

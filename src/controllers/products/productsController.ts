@@ -14,7 +14,7 @@ productRouter.post(
 )
 productRouter.get("/", productController.getPlantsCategories)
 productRouter.get("/:id", productController.getPlantsCategoryById)
-productRouter.put(
+productRouter.patch(
     "/:id",
     auth,
     storageDisk,

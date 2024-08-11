@@ -9,7 +9,7 @@ const consultationRouter = Router()
 consultationRouter.post("/", auth, isAdmin, storageDisk, consultationController.creaateConsultation)
 consultationRouter.get("/", consultationController.getConsultation)
 consultationRouter.get("/:id", consultationController.getConsultationById)
-consultationRouter.put("/:id", auth, isAdmin, storageDisk, consultationController.updatePlantsCategory)
+consultationRouter.patch("/:id", auth, isAdmin, storageDisk, consultationController.updatePlantsCategory)
 consultationRouter.delete("/:id", consultationController.deleteConsultant)
 
 export default consultationRouter

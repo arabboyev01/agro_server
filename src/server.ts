@@ -4,8 +4,6 @@ import cors from "cors"
 import createUser from "./user/create"
 import getUser from "./user/getUser"
 import login from "./user/login"
-import varityDetails from "./routes/varityDetails"
-import TypesByCategories from "./routes/plantsTypes/typesByCategories"
 import userRole from "./user/roleUser"
 import { createUserIfNotExists } from "./prisma/client"
 import consultationRouter from "./controllers/consultation/consultants"
@@ -19,6 +17,8 @@ import plantsTypeRouter from "./controllers/plants/types/typesController"
 import productRouter from "./controllers/products/productsController"
 import regionRouter from "./controllers/region/regionController"
 import distrcitsByRegionId from "./controllers/district/byRegionId/byRegionId"
+import varityDetails from "./controllers/varities/varityController"
+import TypesByCategories from "./controllers/plants/typeByCategories"
 
 const app = express()
 

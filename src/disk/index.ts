@@ -21,11 +21,17 @@ export const storageDisk = (req: AuthRequest, res: Response, next: NextFunction)
 
     upload(req, res, (err: any) => {
         if (err) {
-            return res.status(500).json({ message: 'server error', success: false })
+            return res.status(500).json({ message: 'Server error', success: false })
         } else {
-            const host = req.headers.host
-            const filePath = `${req.protocol}://${host}/image/${imageName}`
-            req.imageUrl = filePath
+            if (req.file) {
+                const host = req.headers.host
+                const filePath = `${req.protocol}://${host}/image/${imageName}`
+                req.imageUrl = filePath
+            } else if (req.body.image) {
+                req.imageUrl = req.body.image
+            } else {
+                return res.status(400).json({ message: 'No image or image URL provided', success: false })
+            }
             next()
         }
     })

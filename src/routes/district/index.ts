@@ -1,10 +1,6 @@
 import { AuthRequest } from "../../types/global";
-import { Response, Router } from "express";
+import { Response } from "express";
 import { prisma } from "../../prisma/client";
-import { auth } from "../../auth";
-import { storageDisk } from "../../disk";
-
-const districtRouter = Router();
 
 class DistrictRouter {
     async createDistrict(req: AuthRequest, res: Response) {
@@ -62,7 +58,7 @@ class DistrictRouter {
             const district = await prisma.district.update({
                 where: { id: Number(req.params.id) },
                 data: { ...req.body },
-            });
+            })
             return res.json({ success: true, data: district });
         } catch (error) {
             return res
