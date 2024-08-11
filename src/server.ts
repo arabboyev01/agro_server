@@ -27,6 +27,8 @@ app.use(cors())
 app.use('/image', express.static('image'))
 
 const PORT = process.env.PORT || 3500
+console.log()
+
 app.use('/', createUserIfNotExists)
 app.use("/api/v1/user", createUser)
 app.use("/api/v1/user", getUser)
@@ -44,7 +46,7 @@ app.use("/api/v1/region", regionRouter)
 app.use("/api/v1/district", districtRouter)
 app.use("/api/v1/district-by-region-id", distrcitsByRegionId)
 app.use("/api/v1/user-role", userRole)
-app.use("/api/v1/cart", Card);
+app.use("/api/v1/cart", Card)
 
 app.listen(PORT, () => {
     console.log(`Port running on ${PORT}`)

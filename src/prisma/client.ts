@@ -6,7 +6,7 @@ export const prisma = new PrismaClient()
 
 export async function createUserIfNotExists(req: Request, res: Response, next: NextFunction) {
   try {
-    const hashPassword = await hashingPassword("admin");
+    const hashPassword = await hashingPassword("admin")
 
     const existingUser = await prisma.user.findUnique({
       where: { email: "admin@gmail.com" },
