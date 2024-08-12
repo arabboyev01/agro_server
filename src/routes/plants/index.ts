@@ -82,27 +82,23 @@ class PlantProducts {
             if (!req.isAdmin) {
                 return res.status(403).json({ success: false, message: "Unathorized" })
             }
-            const { name_uz, name_en, name_ru,  plantsCategoryId, plantTypeId, describtion_uz, describtion_ru, describtion_en } = req.body
 
-            if (!name_en || !name_uz || !name_ru || !plantsCategoryId || !plantTypeId || !describtion_uz || !describtion_ru || !describtion_en) {
-                return res.status(400).json({ ...error })
-            }
             const imageUrl: string = req.imageUrl as string
 
-            const updatedPlantsCategory = await prisma.plant.update({
+            if(req.body.image){
+                req.body.image = imageUrl
+            }
+            if(req.body.plantTypeId) {
+                req.body.plantTypeId = Number(req.body.plantTypeId)
+            }
+
+            if (req.body.plantsCategoryId){
+                req.body.plantsCategoryId = Number(req.body.plantsCategoryId)
+            }
+              const updatedPlantsCategory = await prisma.plant.update({
                 where: { id },
-                data: {
-                    name_uz,
-                    name_ru,
-                    name_en,
-                    image: imageUrl,
-                    plantTypeId: Number(plantTypeId),
-                    plantsCategoryId: Number(plantsCategoryId),
-                    describtion_en, 
-                    describtion_ru,
-                    describtion_uz
-                }
-            })
+                data: {...req.body },
+              });
             return res.json({ success: true, data: updatedPlantsCategory, message: "Plants category updated" })
         } catch (error) {
             return res.status(500).json({ success: false, error: "Unable to create plants category" })

@@ -1,7 +1,6 @@
-import { AuthRequest } from "../../types/global"
-import { Response } from "express"
-import { prisma } from "../../prisma/client"
-
+import { AuthRequest } from "../../types/global";
+import { Response } from "express";
+import { prisma } from "../../prisma/client";
 
 class ProductController {
   async createPlantsCategory(req: AuthRequest, res: Response) {
@@ -34,9 +33,9 @@ class ProductController {
   async getPlantsCategories(req: AuthRequest, res: Response) {
     try {
       const search: string = req.query.search as string;
-      const categoryId: string = req.query.categoryId as string
-      console.log(categoryId)
-      let plantsCategories
+      const categoryId: string = req.query.categoryId as string;
+      console.log(categoryId);
+      let plantsCategories;
       const allProducts = await prisma.product.findMany();
       if (search) {
         plantsCategories = allProducts.filter((item) => {
@@ -44,15 +43,15 @@ class ProductController {
             item.name_uz.toLowerCase().includes(search.toLowerCase()) ||
             item.name_ru.toLowerCase().includes(search.toLowerCase()) ||
             item.name_en.toLowerCase().includes(search.toLowerCase())
-          )
-        })
-      } else if(categoryId){
+          );
+        });
+      } else if (categoryId) {
         plantsCategories = await prisma.product.findMany({
           where: {
             plantTypeId: parseInt(categoryId),
           },
         });
-      }else {
+      } else {
         plantsCategories = allProducts;
       }
       return res.json({ success: true, data: plantsCategories });
@@ -87,24 +86,27 @@ class ProductController {
       if (!req.isAdmin) {
         return res.status(403).json({ success: false, message: "Unathorized" });
       }
-      const { name_uz, name_ru, name_en, plantTypeId, price } = req.body;
       const imageUrl: string = req.imageUrl as string;
 
+      if (req.body.image) {
+        req.body.image = imageUrl;
+      }
+
+      if (req.body.plantTypeId) {
+        req.body.plantTypeId = Number(req.body.plantTypeId);
+      }
+
+      if (req.body.price) {
+        req.body.price = Number(req.body.price);
+      }
       const updatedPlantsCategory = await prisma.product.update({
         where: { id },
-        data: {
-          name_uz,
-          name_ru,
-          name_en,
-          image: imageUrl,
-          plantTypeId: Number(plantTypeId),
-          price: Number(price),
-        },
+        data: { ...req.body },
       });
       return res.json({
         success: true,
         data: updatedPlantsCategory,
-        message: "Plants category updated",
+        message: "Product updated",
       });
     } catch (error) {
       return res
@@ -126,9 +128,9 @@ class ProductController {
     } catch (error) {
       return res
         .status(500)
-        .json({ success: false, error: "Unable to create plants category" })
+        .json({ success: false, error: "Unable to create plants category" });
     }
   }
 }
 
-export const productController = new ProductController()
+export const productController = new ProductController();

@@ -59,11 +59,11 @@ class RegionsClass {
                 where: { id: Number(req.params.id) },
                 data: { ...req.body },
             })
-            return res.json({ success: true, data: region });
+            return res.json({ success: true, data: region })
         } catch (error) {
             return res
                 .status(500)
-                .json({ success: false, error: "Unable to create region" });
+                .json({ success: false, error: "Unable to create region" })
         }
     }
 

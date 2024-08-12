@@ -59,22 +59,23 @@ class PlantsTypeController {
             if (!req.isAdmin) {
                 return res.status(403).json({ success: false, message: "Unathorized" })
             }
-            const { name_uz, name_ru, name_en, categoryId } = req.body
             const imageUrl: string = req.imageUrl as string
+
+            if(req.body.categoryId){
+                req.body.categoryId = Number(req.body.categoryId);
+            }
+
+            if(req.body.image){
+                req.body.image = imageUrl;
+            }
 
             const updatedPlantsCategory = await prisma.plantsType.update({
                 where: { id },
-                data: {
-                    name_uz,
-                    name_ru,
-                    name_en,
-                    image: imageUrl,
-                    categoryId: Number(categoryId)
-                }
+                data: { ...req.body }
             })
             return res.json({ success: true, data: updatedPlantsCategory, message: "Plants category updated" })
         } catch (error) {
-            return res.status(500).json({ success: false, error: "Unable to create plants category" })
+            return res.status(500).json({ success: false, error: "Internal server error" + (error as Error).message })
         }
     }
 

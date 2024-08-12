@@ -8,7 +8,6 @@ import { generateToken } from "../token"
 const login = Router()
 
 login.post("/", async (req: AuthRequest, res: Response) => {
-    console.log(req.body)
     try {
         const { email, password } = req.body
 

@@ -29,8 +29,6 @@ export const storageDisk = (req: AuthRequest, res: Response, next: NextFunction)
                 req.imageUrl = filePath
             } else if (req.body.image) {
                 req.imageUrl = req.body.image
-            } else {
-                return res.status(400).json({ message: 'No image or image URL provided', success: false })
             }
             next()
         }
