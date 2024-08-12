@@ -64,14 +64,9 @@ class PlantsTypeController {
             if(req.body.categoryId){
                 req.body.categoryId = Number(req.body.categoryId);
             }
-
-            if(req.body.image){
-                req.body.image = imageUrl;
-            }
-
             const updatedPlantsCategory = await prisma.plantsType.update({
                 where: { id },
-                data: { ...req.body }
+                data: { ...req.body, image: imageUrl }
             })
             return res.json({ success: true, data: updatedPlantsCategory, message: "Plants category updated" })
         } catch (error) {

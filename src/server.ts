@@ -27,7 +27,6 @@ app.use(cors())
 app.use('/image', express.static('image'))
 
 const PORT = process.env.PORT || 3500
-console.log()
 
 app.use('/', createUserIfNotExists)
 app.use("/api/v1/user", createUser)

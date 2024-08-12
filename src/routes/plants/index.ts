@@ -40,7 +40,6 @@ class PlantProducts {
 
     async getPlantsCategories(req: AuthRequest, res: Response) {
         const categoryId: string = req.query.type as string;
-        console.log(categoryId)
         try {
 
             let plantsCategory
@@ -84,10 +83,6 @@ class PlantProducts {
             }
 
             const imageUrl: string = req.imageUrl as string
-
-            if(req.body.image){
-                req.body.image = imageUrl
-            }
             if(req.body.plantTypeId) {
                 req.body.plantTypeId = Number(req.body.plantTypeId)
             }
@@ -95,10 +90,11 @@ class PlantProducts {
             if (req.body.plantsCategoryId){
                 req.body.plantsCategoryId = Number(req.body.plantsCategoryId)
             }
+
               const updatedPlantsCategory = await prisma.plant.update({
                 where: { id },
-                data: {...req.body },
-              });
+                data: {...req.body, image: imageUrl },
+              })
             return res.json({ success: true, data: updatedPlantsCategory, message: "Plants category updated" })
         } catch (error) {
             return res.status(500).json({ success: false, error: "Unable to create plants category" })

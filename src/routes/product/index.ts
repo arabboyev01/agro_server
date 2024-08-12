@@ -34,7 +34,6 @@ class ProductController {
     try {
       const search: string = req.query.search as string;
       const categoryId: string = req.query.categoryId as string;
-      console.log(categoryId);
       let plantsCategories;
       const allProducts = await prisma.product.findMany();
       if (search) {
@@ -86,11 +85,7 @@ class ProductController {
       if (!req.isAdmin) {
         return res.status(403).json({ success: false, message: "Unathorized" });
       }
-      const imageUrl: string = req.imageUrl as string;
-
-      if (req.body.image) {
-        req.body.image = imageUrl;
-      }
+      const imageUrl: string = req.imageUrl as string
 
       if (req.body.plantTypeId) {
         req.body.plantTypeId = Number(req.body.plantTypeId);
@@ -101,7 +96,7 @@ class ProductController {
       }
       const updatedPlantsCategory = await prisma.product.update({
         where: { id },
-        data: { ...req.body },
+        data: { ...req.body, image: imageUrl },
       });
       return res.json({
         success: true,
