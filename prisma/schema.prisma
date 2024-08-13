@@ -76,6 +76,7 @@ model Consultation {
   image         String
   telegram_user String
   youtube_url   String?
+  questions Questions[]
 }
 
 model User {
@@ -86,7 +87,6 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   Carts     Cart[]
-  questions Questions[]
 }
 
 model Information {
@@ -132,6 +132,6 @@ model Questions {
   fullName String
   phone    String
   question String
-  userId   Int
-  user     User   @relation(fields: [userId], references: [id])
+  consultantId   Int 
+  consultant     Consultation   @relation(fields: [consultantId], references: [id])
 }

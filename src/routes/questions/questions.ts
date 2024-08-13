@@ -5,13 +5,14 @@ const prisma = new PrismaClient()
 
 export const questionRoute = async (req: Request, res: Response) => {
     try {
-        if (req.body.userId) {
-            req.body.userId = Number(req.body.userId);
+        if (req.body.consultantId) {
+            req.body.consultantId = Number(req.body.consultantId)
         }
 
         const question = await prisma.questions.create({
             data: { ...req.body }
         })
+        console.log(question)
 
         if (!question) {
             return res.status(400).json({ success: false, message: "Something wrong happened" })
@@ -27,7 +28,7 @@ export const getAllQuestionRoute = async (req: Request, res: Response) => {
   try {
     const questions = await prisma.questions.findMany({
         include: {
-            user: true
+            consultant: true
         }
     })
 
