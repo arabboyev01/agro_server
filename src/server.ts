@@ -19,6 +19,7 @@ import regionRouter from "./controllers/region/regionController"
 import distrcitsByRegionId from "./controllers/district/byRegionId/byRegionId"
 import varityDetails from "./controllers/varities/varityController"
 import TypesByCategories from "./controllers/plants/typeByCategories"
+import questionRouter from "./controllers/questionRoute/questionRoute"
 
 const app = express()
 
@@ -46,6 +47,7 @@ app.use("/api/v1/district", districtRouter)
 app.use("/api/v1/district-by-region-id", distrcitsByRegionId)
 app.use("/api/v1/user-role", userRole)
 app.use("/api/v1/cart", Card)
+app.use("/api/v1/question", questionRouter)
 
 app.listen(PORT, () => {
     console.log(`Port running on ${PORT}`)

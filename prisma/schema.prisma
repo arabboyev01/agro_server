@@ -86,6 +86,7 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   Carts     Cart[]
+  questions Questions[]
 }
 
 model Information {
@@ -119,9 +120,18 @@ model District {
 
 model Cart {
   id        Int     @id @default(autoincrement())
-  userId    Int 
-  productId Int     @default(0) @unique()
+  userId    Int
+  productId Int     @unique() @default(0)
   users     User    @relation(fields: [userId], references: [id])
   prodcuts  Product @relation(fields: [productId], references: [id])
   count     Int     @default(1)
+}
+
+model Questions {
+  id       Int    @id @default(autoincrement())
+  fullName String
+  phone    String
+  question String
+  userId   Int
+  user     User   @relation(fields: [userId], references: [id])
 }
