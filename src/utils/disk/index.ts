@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express'
 import path from 'path'
 import multer from 'multer'
-import { AuthRequest } from '../types/global'
+import { AuthRequest } from '../../types/global'
 
 export const storageDisk = (req: AuthRequest, res: Response, next: NextFunction) => {
     let imageName = ''

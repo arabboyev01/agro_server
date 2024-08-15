@@ -5,7 +5,7 @@ import createUser from "./user/create"
 import getUser from "./user/getUser"
 import login from "./user/login"
 import userRole from "./user/roleUser"
-import { createUserIfNotExists } from "./prisma/client"
+import { createUserIfNotExists } from "./utils/prisma/client"
 import consultationRouter from "./controllers/consultation/consultants"
 import districtRouter from "./controllers/district/district"
 import mapInformation from "./controllers/map/map"
@@ -20,16 +20,17 @@ import distrcitsByRegionId from "./controllers/district/byRegionId/byRegionId"
 import varityDetails from "./controllers/varities/varityController"
 import TypesByCategories from "./controllers/plants/typeByCategories"
 import questionRouter from "./controllers/questionRoute/questionRoute"
+import { corsOptions } from "./utils/cors/cors"
 
 const app = express()
 
 app.use(express.json())
-app.use(cors())
-app.use('/image', express.static('image'))
+app.use(cors(corsOptions))
+app.use("/image", express.static("image"))
 
 const PORT = process.env.PORT || 3500
 
-app.use('/', createUserIfNotExists)
+app.use("/", createUserIfNotExists)
 app.use("/api/v1/user", createUser)
 app.use("/api/v1/user", getUser)
 app.use("/api/v1/login", login)
@@ -50,6 +51,5 @@ app.use("/api/v1/cart", Card)
 app.use("/api/v1/question", questionRouter)
 
 app.listen(PORT, () => {
-    console.log(`Port running on ${PORT}`)
+  console.log(`Port running on ${PORT}`)
 })
-

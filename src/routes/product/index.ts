@@ -1,6 +1,6 @@
 import { AuthRequest } from "../../types/global";
 import { Response } from "express";
-import { prisma } from "../../prisma/client";
+import { prisma } from "../../utils/prisma/client";
 
 class ProductController {
   async createPlantsCategory(req: AuthRequest, res: Response) {
@@ -85,7 +85,7 @@ class ProductController {
       if (!req.isAdmin) {
         return res.status(403).json({ success: false, message: "Unathorized" });
       }
-      const imageUrl: string = req.imageUrl as string
+      const imageUrl: string = req.imageUrl as string;
 
       if (req.body.plantTypeId) {
         req.body.plantTypeId = Number(req.body.plantTypeId);

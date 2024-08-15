@@ -1,88 +1,88 @@
-import { AuthRequest } from "../../types/global"
-import { Response } from "express"
-import { prisma } from "../../prisma/client"
+import { AuthRequest } from "../../types/global";
+import { Response } from "express";
+import { prisma } from "../../utils/prisma/client";
 
 class RegionsClass {
-    async createRegion(req: AuthRequest, res: Response) {
-        try {
-            if (!req.isAdmin) {
-                return res.status(403).json({ success: false, message: "Unathorized" });
-            }
+  async createRegion(req: AuthRequest, res: Response) {
+    try {
+      if (!req.isAdmin) {
+        return res.status(403).json({ success: false, message: "Unathorized" });
+      }
 
-            const region = await prisma.region.create({
-                data: { ...req.body },
-            });
-            return res.json({ success: true, data: region });
-        } catch (error) {
-            return res
-                .status(500)
-                .json({ success: false, error: "Unable to create region" });
-        }
+      const region = await prisma.region.create({
+        data: { ...req.body },
+      });
+      return res.json({ success: true, data: region });
+    } catch (error) {
+      return res
+        .status(500)
+        .json({ success: false, error: "Unable to create region" });
     }
+  }
 
-    async getRegions(req: AuthRequest, res: Response) {
-        try {
-            const regions = await prisma.region.findMany()
+  async getRegions(req: AuthRequest, res: Response) {
+    try {
+      const regions = await prisma.region.findMany();
 
-            return res.json({ success: true, data: regions });
-        } catch (error) {
-            res.status(500).json({ error: "Unable to retrieve regions" });
-        }
+      return res.json({ success: true, data: regions });
+    } catch (error) {
+      res.status(500).json({ error: "Unable to retrieve regions" });
     }
+  }
 
-    async getRegionById(req: AuthRequest, res: Response) {
-        try {
-            const id = parseInt(req.params.id);
-            const region = await prisma.region.findUnique({
-                where: { id },
-            });
-            if (!region) {
-                return res
-                    .status(404)
-                    .json({ success: false, error: "Region not found" });
-            }
-            return res.json({ success: true, data: region });
-        } catch (error) {
-            return res
-                .status(500)
-                .json({ success: false, error: "Unable to get region" });
-        }
+  async getRegionById(req: AuthRequest, res: Response) {
+    try {
+      const id = parseInt(req.params.id);
+      const region = await prisma.region.findUnique({
+        where: { id },
+      });
+      if (!region) {
+        return res
+          .status(404)
+          .json({ success: false, error: "Region not found" });
+      }
+      return res.json({ success: true, data: region });
+    } catch (error) {
+      return res
+        .status(500)
+        .json({ success: false, error: "Unable to get region" });
     }
+  }
 
-    async updateRegion(req: AuthRequest, res: Response) {
-        try {
-            if (!req.isAdmin) {
-                return res.status(403).json({ success: false, message: "Unathorized" });
-            }
+  async updateRegion(req: AuthRequest, res: Response) {
+    try {
+      if (!req.isAdmin) {
+        return res.status(403).json({ success: false, message: "Unathorized" });
+      }
 
-            const region = await prisma.region.update({
-                where: { id: Number(req.params.id) },
-                data: { ...req.body },
-            })
-            return res.json({ success: true, data: region })
-        } catch (error) {
-            return res
-                .status(500)
-                .json({ success: false, error: "Unable to create region" })
-        }
+      const region = await prisma.region.update({
+        where: { id: Number(req.params.id) },
+        data: { ...req.body },
+      });
+      return res.json({ success: true, data: region });
+    } catch (error) {
+      return res
+        .status(500)
+        .json({ success: false, error: "Unable to create region" });
     }
+  }
 
-    async deleteRegion(req: AuthRequest, res: Response) {
-        try {
-            const id = parseInt(req.params.id);
-            await prisma.region.delete({
-                where: { id },
-            });
-            return res.json({
-                success: true,
-                message: "Region deleted successfully",
-            });
-        } catch (error) {
-            return res
-                .status(500)
-                .json({ success: false, error: "Unable to create plants category" });
-        }
+  async deleteRegion(req: AuthRequest, res: Response) {
+    try {
+      const id = parseInt(req.params.id);
+      await prisma.region.delete({
+        where: { id },
+      });
+      return res.json({
+        success: true,
+        message: "Region deleted successfully",
+      });
+    } catch (error) {
+      return res
+        .status(500)
+        .json({ success: false, error: "Unable to create plants category" });
     }
+  }
 }
 
-export const regionsClass = new RegionsClass()
+export const regionsClass = new RegionsClass();

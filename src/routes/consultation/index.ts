@@ -1,6 +1,6 @@
 import { AuthRequest } from "../../types/global";
 import { Response } from "express";
-import { prisma } from "../../prisma/client";
+import { prisma } from "../../utils/prisma/client";
 
 class ConsultationController {
   async creaateConsultation(req: AuthRequest, res: Response) {

@@ -1,6 +1,6 @@
 import { Router } from "express"
 import { auth } from "../../../auth"
-import { storageDisk } from "../../../disk"
+import { storageDisk } from "../../../utils/disk"
 import { plantsCategoryController } from "../../../routes/plantsCategories"
 
 const plantsCategoryRouter = Router()

@@ -1,9 +1,9 @@
-import { prisma } from "../prisma/client"
-import { Router, Response } from "express"
-import { AuthRequest } from "../types/global"
-import { error, success } from "../global/error"
-import { hashingPassword } from "../hash"
-import { generateToken } from "../token"
+import { prisma } from "../utils/prisma/client";
+import { Router, Response } from "express";
+import { AuthRequest } from "../types/global";
+import { error, success } from "../utils/global/error";
+import { hashingPassword } from "../utils/hash";
+import { generateToken } from "../utils/token";
 
 const createUser = Router();
 
@@ -24,12 +24,12 @@ createUser.post("/", async (req: AuthRequest, res: Response) => {
       return res.status(403).json({ ...error });
     }
 
-    const token = generateToken(user.id)
+    const token = generateToken(user.id);
     return res
       .status(201)
       .json({ ...success, message: "user created", token, user });
   } catch (err: unknown) {
     return res.status(501).json({ ...error, message: (err as Error).message });
   }
-})
-export default createUser
+});
+export default createUser;

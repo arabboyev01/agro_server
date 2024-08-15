@@ -1,7 +1,7 @@
 import { Router } from "express"
 import { auth } from "../../auth"
 import isAdmin from "../../auth/admin"
-import { storageDisk } from "../../disk"
+import { storageDisk } from "../../utils/disk"
 import { consultationController } from "../../routes/consultation"
 
 const consultationRouter = Router()
