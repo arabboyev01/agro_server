@@ -1,6 +1,6 @@
-import { Router } from "express"
-import { auth } from "../../../auth"
-import { getDistrictByRegionId } from "../../../routes/district/districtsByRegionId"
+import { Router } from 'express'
+import { auth } from '../../../auth'
+import { getDistrictByRegionId } from '../../../routes/district/districtsByRegionId'
 
 const distrcitsByRegionId = Router()
 

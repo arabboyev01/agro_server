@@ -1,4 +1,4 @@
-import { questionRoute, getAllQuestionRoute } from "../../routes/questions/questions"
+import { questionRoute, getAllQuestionRoute } from '../../routes/questions/questions'
 import { Router } from 'express'
 
 const questionRouter = Router()
