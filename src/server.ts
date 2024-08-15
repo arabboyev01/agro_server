@@ -20,11 +20,12 @@ import distrcitsByRegionId from './controllers/district/byRegionId/byRegionId'
 import varityDetails from './controllers/varities/varityController'
 import TypesByCategories from './controllers/plants/typeByCategories'
 import questionRouter from './controllers/questionRoute/questionRoute'
+import { whitelist } from './utils/cors/cors'
 
 const app = express()
 
 app.use(express.json())
-app.use(cors())
+app.use(cors(whitelist))
 app.use('/image', express.static('image'))
 
 const PORT = process.env.PORT || 3500
