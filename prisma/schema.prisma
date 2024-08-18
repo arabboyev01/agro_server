@@ -49,15 +49,18 @@ model Plant {
 }
 
 model Product {
-  id          Int     @id @default(autoincrement())
-  name_uz     String
-  name_en     String
-  name_ru     String
-  plantTypeId Int
-  plantType   Order[]
-  price       Int
-  image       String
-  cart        Cart[]
+  id             Int     @id @default(autoincrement())
+  name_uz        String
+  name_en        String
+  name_ru        String
+  plantTypeId    Int
+  plantType      Order[]
+  price          Int
+  image          String
+  cart           Cart[]
+  describtion_uz String  @default("")
+  describtion_ru String  @default("")
+  describtion_en String  @default("")
 }
 
 model Order {
@@ -69,14 +72,14 @@ model Order {
 }
 
 model Consultation {
-  id            Int     @id @default(autoincrement())
+  id            Int         @id @default(autoincrement())
   fullName      String
   dagree        String
   phone_number  String
   image         String
   telegram_user String
   youtube_url   String?
-  questions Questions[]
+  questions     Questions[]
 }
 
 model User {
@@ -128,10 +131,10 @@ model Cart {
 }
 
 model Questions {
-  id       Int    @id @default(autoincrement())
-  fullName String
-  phone    String
-  question String
-  consultantId   Int 
-  consultant     Consultation   @relation(fields: [consultantId], references: [id])
+  id           Int          @id @default(autoincrement())
+  fullName     String
+  phone        String
+  question     String
+  consultantId Int
+  consultant   Consultation @relation(fields: [consultantId], references: [id])
 }

@@ -9,7 +9,7 @@ class ProductController {
         return res.status(403).json({ success: false, message: 'Unathorized' })
       }
 
-      const { name_uz, name_ru, name_en, plantTypeId, price } = req.body
+      const { name_uz, name_ru, name_en, plantTypeId, price, describtion_uz, describtion_ru, describtion_en } = req.body
       const imageUrl: string = req.imageUrl as string
 
       const newPlantsCategory = await prisma.product.create({
@@ -20,6 +20,9 @@ class ProductController {
           image: imageUrl,
           plantTypeId: Number(plantTypeId),
           price: Number(price),
+          describtion_uz,
+          describtion_ru,
+          describtion_en
         },
       })
       return res.json({ success: true, data: newPlantsCategory })
